@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronohistory - Linha do Tempo Interativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            font-family: 'Lato', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Estilo melhorado para os cards da timeline */
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 3rem;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card com estilo melhorado */
+        .timeline-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFCF8 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(139, 105, 20, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8B6914, #D4C5A9, #8B6914);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .timeline-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(139, 105, 20, 0.2);
+        }
+
+        /* Dots da linha do tempo */
+        .timeline-dot {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 0 4px rgba(139, 105, 20, 0.2);
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.4);
+            box-shadow: 0 0 0 8px rgba(139, 105, 20, 0.3);
+            background-color: #D4C5A9;
+        }
+
+        /* Linha central */
+        .timeline-line {
+            background: linear-gradient(180deg, #8B6914, #D4C5A9, #8B6914);
+            box-shadow: 0 0 5px rgba(139, 105, 20, 0.3);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .filter-active {
+            background-color: #D4C5A9 !important;
+            color: #5C4033 !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #E8DCC8;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #A68A56;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B6914;
+        }
+
+        .loading-spinner {
+            border: 3px solid #E8DCC8;
+            border-top: 3px solid #8B6914;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Badge de ano estilizada */
+        .year-badge {
+            background: linear-gradient(135deg, #8B6914, #A68A56);
+            box-shadow: 0 2px 8px rgba(139, 105, 20, 0.3);
+        }
+
+        /* Botões estilizados */
+        .btn-primary {
+            background: linear-gradient(135deg, #8B6914, #A68A56);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #6B4F0E, #8B6914);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 105, 20, 0.3);
+        }
+
+        .btn-secondary {
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #8B6914 !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 105, 20, 0.2);
+        }
+
+        /* Container dos cards com mais espaçamento */
+        .timeline-container {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        /* Efeito de vidro nos cards */
+        .glass-effect {
+            backdrop-filter: blur(10px);
+        }
+    </style>
+
+<body class="bg-gradient-to-b from-[#F5F0E6] to-[#EDE5D6]">
+
+    <header class="bg-[#E8DCC8] shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="text-3xl">🦉</div>
+                    <h1 class="text-xl sm:text-3xl font-bold text-[#5C4033]">Chronohistory</h1>
+                </div>
+
+                <!-- Menu Desktop -->
+                <nav class="hidden md:flex items-center space-x-4">
+                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-5 py-2 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2"
+                        href="/index.html">
+                        <span></span> Linha do tempo
+                    </a>
+                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-5 py-2 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2"
+                        href="/jogo.html">
+                        <span></span> Jogo Interativo
+                    </a>
+                </nav>
+
+                <!-- Botão Menu Mobile -->
+                <button id="menuBtn" class="md:hidden text-[#8B6914] text-3xl focus:outline-none">
+                    ☰
+                </button>
+            </div>
+
+            <!-- Menu Mobile Dropdown -->
+            <nav id="mobileMenu" class="hidden md:hidden mt-4 flex flex-col space-y-3 pb-4">
+                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    href="/index.html">
+                    <span></span> Linha do tempo
+                </a>
+                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    href="/jogo.html">
+                    <span></span> Jogo Interativo
+                </a>
+            </nav>
+        </div>
+    </header>
+
+
+<script src="script.js"></script>
+</body>
+
+</html>
