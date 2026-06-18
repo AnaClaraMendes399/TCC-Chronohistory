@@ -115,6 +115,9 @@ function processarEventos() {
                 const anoNumerico = converterAnoParaNumero(evento.ano);
                 const anoFormatado = formatarAno(evento.ano);
                 
+                // Gerar um ID único global
+                const globalId = `${periodo.id || periodo.nome}_${evento.id || Math.random().toString(36).substr(2, 9)}`;
+                
                 todosEventos.push({
                     ...evento,
                     anoNumerico: anoNumerico,
@@ -125,13 +128,15 @@ function processarEventos() {
                     periodoResumo: periodo.resumo || '',
                     caracteristicas_principais: periodo.caracteristicas_principais || [],
                     legado: periodo.legado || '',
-                    curiosidades: periodo.curiosidades || []
+                    curiosidades: periodo.curiosidades || [],
+                    globalId: globalId
                 });
             });
         } else if (periodo.nome) {
             const periodoInfo = periodo.periodo || '';
             const anoNumerico = converterAnoParaNumero(periodoInfo);
             const anoFormatado = formatarAno(periodoInfo);
+            const globalId = `${periodo.id || periodo.nome}_${Math.random().toString(36).substr(2, 9)}`;
             
             todosEventos.push({
                 id: periodo.id || todosEventos.length + 1,
@@ -148,7 +153,8 @@ function processarEventos() {
                 periodoResumo: periodo.resumo || '',
                 caracteristicas_principais: periodo.caracteristicas_principais || [],
                 legado: periodo.legado || '',
-                curiosidades: periodo.curiosidades || []
+                curiosidades: periodo.curiosidades || [],
+                globalId: globalId
             });
         }
     });
@@ -325,7 +331,7 @@ function adicionarEventoTimeline(evento, container, index) {
                     
                     <!-- Botões de ação - TEXTO MAIOR -->
                     <div class="flex gap-4 mt-5 flex-wrap">
-                        <button onclick="abrirSaberMais(${evento.id})" 
+                        <button onclick="abrirSaberMais('${evento.globalId}')" 
                                 class="btn-primary px-7 py-3.5 text-white rounded-xl font-semibold flex items-center gap-2 shadow-md action-btn text-lg">
                             🦉 Saber Mais
                         </button>
@@ -350,21 +356,23 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Abrir modal "Saber Mais"
-async function abrirSaberMais(eventoId) {
-    const evento = todosEventos.find(e => e.id === eventoId);
+// Abrir modal "Saber Mais" - CORRIGIDO
+async function abrirSaberMais(globalId) {
+    // Encontrar evento usando globalId
+    const evento = todosEventos.find(e => e.globalId === globalId);
     if (!evento) {
-        console.error('Evento não encontrado:', eventoId);
+        console.error('Evento não encontrado com globalId:', globalId);
         return;
     }
     
     const modal = document.getElementById('saberMaisModal');
     const modalContent = document.getElementById('modalContent');
     
+    // Mostrar loading
     modalContent.innerHTML = `
         <div class="text-center py-8">
             <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-[#8B7355] text-xl">Buscando informações detalhadas sobre ${evento.nome}...</p>
+            <p class="text-[#8B7355] text-xl">Buscando informações sobre ${evento.nome}...</p>
             <p class="text-sm text-[#8B7355] mt-2">🦉 A sabedoria está a caminho</p>
         </div>
     `;
@@ -373,12 +381,13 @@ async function abrirSaberMais(eventoId) {
     modal.classList.add('flex');
     
     try {
+        // 🔥 CORREÇÃO AQUI: Passando o nome do evento como "periodo"
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ periodo: evento.periodoNome })
+            body: JSON.stringify({ periodo: evento.nome })
         });
         
         if (!response.ok) {
@@ -386,20 +395,41 @@ async function abrirSaberMais(eventoId) {
         }
         
         const data = await response.json();
-        console.log('Resposta do POST:', data);
+        console.log('Resposta da API para:', evento.nome, data);
         
         let informacoes = null;
         
+        // Extrair informações da resposta
         if (data.informações) {
             informacoes = data.informações.periodo_unico || data.informações;
         } else if (data.periodo_unico) {
             informacoes = data.periodo_unico;
         } else if (data.data) {
             informacoes = data.data;
+        } else if (data.periodo) {
+            informacoes = data.periodo;
         }
         
-        if (informacoes) {
-            const eventoDetalhado = informacoes.acontecimentos?.find(e => e.id === eventoId);
+        // Se ainda não tiver informações, usar o próprio data
+        if (!informacoes && typeof data === 'object') {
+            informacoes = data;
+        }
+        
+        // Se tiver informações, exibir
+        if (informacoes && Object.keys(informacoes).length > 0) {
+            // Tentar extrair dados relevantes
+            const caracteristicas = informacoes.caracteristicas_principais || 
+                                   informacoes.caracteristicas || 
+                                   informacoes.características || 
+                                   informacoes.caracteristicas_principais || [];
+            
+            const curiosidades = informacoes.curiosidades || 
+                                informacoes.curiosidade || 
+                                informacoes.curiosidades_historicas || [];
+            
+            const legado = informacoes.legado || 
+                          informacoes.legado_historico || 
+                          informacoes.legado_histórico || '';
             
             modalContent.innerHTML = `
                 <div class="space-y-5">
@@ -410,55 +440,69 @@ async function abrirSaberMais(eventoId) {
                         <p class="text-base text-[#8B7355] mt-1">${escapeHtml(evento.ano)} • ${escapeHtml(evento.lugar)}</p>
                     </div>
                     
-                    <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                        <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
-                            <span>📖</span> O que aconteceu:
-                        </h5>
-                        <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(eventoDetalhado?.oque_aconteceu || evento.oque_aconteceu || 'Informação não disponível')}</p>
-                    </div>
-                    
-                    <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                        <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
-                            <span>🔄</span> O que mudou:
-                        </h5>
-                        <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(eventoDetalhado?.oque_mudou || evento.oque_mudou || 'Impacto histórico significativo documentado')}</p>
-                    </div>
-                    
-                    ${eventoDetalhado?.figuras_principais && eventoDetalhado.figuras_principais.length > 0 ? `
-                        <div>
+                    ${evento.oque_aconteceu ? `
+                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
                             <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
-                                <span>👥</span> Figuras principais:
+                                <span>📖</span> O que aconteceu:
                             </h5>
-                            <ul class="list-disc list-inside text-[#6B5B4F] space-y-2 text-base">
-                                ${eventoDetalhado.figuras_principais.map(f => `<li>${escapeHtml(f.nome)} - ${escapeHtml(f.papel)}</li>`).join('')}
-                            </ul>
+                            <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(evento.oque_aconteceu)}</p>
                         </div>
                     ` : ''}
                     
-                    ${informacoes.caracteristicas_principais && informacoes.caracteristicas_principais.length > 0 ? `
+                    ${evento.oque_mudou ? `
+                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
+                            <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
+                                <span>🔄</span> O que mudou:
+                            </h5>
+                            <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(evento.oque_mudou)}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${legado ? `
+                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
+                            <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
+                                <span>🏛️</span> Legado:
+                            </h5>
+                            <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(legado)}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${caracteristicas.length > 0 ? `
                         <div>
                             <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
                                 <span>✨</span> Características principais:
                             </h5>
                             <ul class="list-disc list-inside text-[#6B5B4F] space-y-2 text-base">
-                                ${informacoes.caracteristicas_principais.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+                                ${caracteristicas.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
                             </ul>
                         </div>
                     ` : ''}
                     
-                    ${(informacoes.curiosidades && informacoes.curiosidades.length > 0) || (evento.curiosidades && evento.curiosidades.length > 0) ? `
+                    ${evento.figuras_principais && evento.figuras_principais.length > 0 ? `
+                        <div>
+                            <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
+                                <span>👥</span> Figuras principais:
+                            </h5>
+                            <ul class="list-disc list-inside text-[#6B5B4F] space-y-2 text-base">
+                                ${evento.figuras_principais.map(f => `<li>${escapeHtml(f.nome)} - ${escapeHtml(f.papel)}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${curiosidades.length > 0 ? `
                         <div class="bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-6 rounded-xl">
                             <h5 class="font-semibold text-[#5C4033] mb-3 flex items-center gap-2 text-lg">
                                 <span>🦉</span> Curiosidades históricas:
                             </h5>
                             <ul class="space-y-3">
-                                ${(informacoes.curiosidades || evento.curiosidades || []).slice(0, 3).map(c => `<li class="text-base text-[#6B5B4F] flex items-start gap-2"><span class="text-[#8B6914]">•</span> ${escapeHtml(c)}</li>`).join('')}
+                                ${curiosidades.slice(0, 3).map(c => `<li class="text-base text-[#6B5B4F] flex items-start gap-2"><span class="text-[#8B6914]">•</span> ${escapeHtml(c)}</li>`).join('')}
                             </ul>
                         </div>
                     ` : ''}
                 </div>
             `;
         } else {
+            // Se não encontrou informações, mostrar o que temos
             modalContent.innerHTML = `
                 <div class="space-y-4">
                     <div class="border-b border-[#D4C5A9] pb-3">
@@ -466,10 +510,12 @@ async function abrirSaberMais(eventoId) {
                         <p class="text-base text-[#8B7355]">${escapeHtml(evento.ano)} • ${escapeHtml(evento.lugar)}</p>
                     </div>
                     
-                    <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                        <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">📖 Descrição:</h5>
-                        <p class="text-[#6B5B4F] text-base">${escapeHtml(evento.oque_aconteceu || 'Este evento marcou a história de forma significativa.')}</p>
-                    </div>
+                    ${evento.oque_aconteceu ? `
+                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
+                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">📖 Descrição:</h5>
+                            <p class="text-[#6B5B4F] text-base">${escapeHtml(evento.oque_aconteceu)}</p>
+                        </div>
+                    ` : ''}
                     
                     ${evento.legado ? `
                         <div class="bg-[#F5F0E6] p-5 rounded-xl">
@@ -480,7 +526,7 @@ async function abrirSaberMais(eventoId) {
                     
                     <div class="bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-5 rounded-xl text-center">
                         <span class="text-4xl">🦉</span>
-                        <p class="text-base text-[#8B7355] mt-3">Para mais detalhes, consulte fontes históricas especializadas.</p>
+                        <p class="text-base text-[#8B7355] mt-3">Informações complementares disponíveis em fontes históricas.</p>
                     </div>
                 </div>
             `;
@@ -494,7 +540,7 @@ async function abrirSaberMais(eventoId) {
                 <p class="text-sm text-[#8B7355] mt-2">Tente novamente mais tarde.</p>
                 <div class="mt-4 p-5 bg-[#F5F0E6] rounded-xl text-left">
                     <p class="text-base text-[#6B5B4F]"><strong>${escapeHtml(evento.nome)}</strong></p>
-                    <p class="text-base text-[#6B5B4F] mt-2">${escapeHtml(evento.oque_aconteceu || 'Evento histórico importante.')}</p>
+                    ${evento.oque_aconteceu ? `<p class="text-base text-[#6B5B4F] mt-2">${escapeHtml(evento.oque_aconteceu)}</p>` : ''}
                 </div>
             </div>
         `;
