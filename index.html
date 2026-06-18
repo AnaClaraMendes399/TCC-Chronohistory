@@ -4,31 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronohistory - Linha do Tempo Interativa</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Chronohistory</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="medieval.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
     <style>
-        * {
-            font-family: 'Lato', sans-serif;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            font-family: 'Playfair Display', serif;
-        }
-
-        /* Estilo melhorado para os cards da timeline */
+        /* Estilo melhorado para os cards da timeline - TAMANHOS AUMENTADOS */
         .timeline-item {
             opacity: 0;
             transform: translateY(40px);
             transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
         }
 
         .timeline-item.visible {
@@ -36,14 +28,15 @@
             transform: translateY(0);
         }
 
-        /* Card com estilo melhorado */
+        /* Card com estilo melhorado e TAMANHO AUMENTADO */
         .timeline-card {
             background: linear-gradient(135deg, #FFFFFF 0%, #FEFCF8 100%);
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(139, 105, 20, 0.1);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            padding: 2rem;
         }
 
         .timeline-card::before {
@@ -150,16 +143,20 @@
             overflow: hidden;
         }
 
-        /* Badge de ano estilizada */
+        /* Badge de ano estilizada - TAMANHO AUMENTADO */
         .year-badge {
             background: linear-gradient(135deg, #8B6914, #A68A56);
             box-shadow: 0 2px 8px rgba(139, 105, 20, 0.3);
+            font-size: 1.1rem;
+            padding: 0.5rem 1.2rem;
         }
 
-        /* Botões estilizados */
+        /* Botões estilizados - TAMANHO AUMENTADO */
         .btn-primary {
             background: linear-gradient(135deg, #8B6914, #A68A56);
             transition: all 0.3s ease;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
         }
 
         .btn-primary:hover {
@@ -170,6 +167,8 @@
 
         .btn-secondary {
             transition: all 0.3s ease;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
         }
 
         .btn-secondary:hover {
@@ -189,67 +188,216 @@
         .glass-effect {
             backdrop-filter: blur(10px);
         }
+
+        /* Header ajustes - texto maior */
+        header h1 {
+            font-size: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Aumentar textos em geral */
+        body {
+            font-size: 1.1rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 4.5rem;
+            }
+        }
+
+        .hero-desc {
+            font-size: 1.3rem;
+        }
+
+        .hero-badge {
+            font-size: 1rem;
+        }
+
+        .hero-btn-primary,
+        .hero-btn-secondary {
+            font-size: 1.2rem;
+            padding: 0.9rem 2.2rem;
+        }
+
+        .timeline-card h3 {
+            font-size: 1.8rem;
+        }
+
+        .timeline-card p {
+            font-size: 1.2rem;
+        }
+
+        .filter-section h2 {
+            font-size: 1.8rem;
+        }
+
+        .filter-section label {
+            font-size: 1rem;
+        }
+
+        .filter-section select,
+        .filter-section input {
+            font-size: 1.05rem;
+            padding: 0.7rem 1rem;
+        }
+
+        footer span {
+            font-size: 1.1rem;
+        }
+
+        /* Aumentar tamanho das tags */
+        .timeline-card .tag-text {
+            font-size: 0.95rem;
+            padding: 0.4rem 1rem;
+        }
+
+        /* Aumentar espaçamento entre elementos do card */
+        .timeline-card .card-spacing {
+            margin-bottom: 1.2rem;
+        }
+
+        /* Aumentar área de clique dos botões */
+        .timeline-card .action-btn {
+            padding: 0.8rem 2rem;
+            font-size: 1.05rem;
+        }
+
+        /* Responsividade para cards maiores */
+        @media (max-width: 768px) {
+            .timeline-card {
+                padding: 1.5rem;
+            }
+
+            .timeline-card h3 {
+                font-size: 1.4rem;
+            }
+
+            .timeline-card p {
+                font-size: 1rem;
+            }
+
+            .year-badge {
+                font-size: 0.9rem;
+                padding: 0.3rem 1rem;
+            }
+        }
+
+        /* CORREÇÃO: Esconder botão menu em telas grandes */
+        @media (min-width: 1024px) {
+            #menuBtn {
+                display: none !important;
+            }
+        }
+
+        /* Garantir que o menu mobile fique escondido em LG */
+        @media (min-width: 1024px) {
+            #mobileMenu {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body class="bg-gradient-to-b from-[#F5F0E6] to-[#EDE5D6]">
+
+    <!-- ═══ RETRO PIXEL BACKGROUND VIDEO ═══ -->
+    <div class="video-bg-container">
+        <video autoplay muted loop playsinline preload="auto">
+            <source src="vei.mp4" type="video/mp4">
+        </video>
+        <div class="video-bg-overlay"></div>
+    </div>
 
     <header class="bg-[#E8DCC8] shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div class="text-3xl">🦉</div>
-                    <h1 class="text-xl sm:text-3xl font-bold text-[#5C4033]">Chronohistory</h1>
+                    <img src="logo.png" alt="Logo Chronohistory" class="h-14 w-14 object-contain">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-[#5C4033]">Chronohistory</h1>
                 </div>
 
-                <!-- Menu Desktop -->
-                <nav class="hidden md:flex items-center space-x-4">
-                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-5 py-2 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2"
-                        href="/index.html">
-                        <span></span> Linha do tempo
+                <!-- Menu Desktop - visível apenas em LG+ -->
+                <nav class="hidden lg:flex items-center space-x-4 gap-10">
+                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2 text-lg"
+                        href="index.html">
+                        Linha do tempo
                     </a>
-                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-5 py-2 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2"
-                        href="/jogo.html">
-                        <span></span> Jogo Interativo
+                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2 text-lg"
+                        href="jogo.html">
+                        Jogo Interativo
                     </a>
                 </nav>
 
-                <!-- Botão Menu Mobile -->
-                <button id="menuBtn" class="md:hidden text-[#8B6914] text-3xl focus:outline-none">
+                <!-- Botão Menu Mobile - aparece apenas em telas menores que LG -->
+                <button id="menuBtn" class="lg:hidden text-[#8B6914] text-4xl focus:outline-none">
                     ☰
                 </button>
             </div>
 
-            <!-- Menu Mobile Dropdown -->
-            <nav id="mobileMenu" class="hidden md:hidden mt-4 flex flex-col space-y-3 pb-4">
-                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                    href="/index.html">
-                    <span>⏳</span> Linha do tempo
+            <!-- Menu Mobile Dropdown - visível apenas quando aberto em telas menores que LG -->
+            <nav id="mobileMenu" class="hidden lg:hidden mt-4 flex-col space-y-3 pb-4">
+                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-4 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-lg"
+                    href="index.html">
+                    Linha do tempo
                 </a>
-                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                    href="/jogo.html">
-                    <span>🎮</span> Jogo Interativo
+                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-4 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-lg"
+                    href="jogo.html">
+                    Jogo Interativo
                 </a>
             </nav>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- ═══ HERO SECTION ═══ -->
+    <section class="hero-section" id="hero">
+        <!-- Overlay gradiente só à esquerda -->
+        <div class="hero-overlay"></div>
 
-        <!-- Banner decorativo com coruja -->
-        <div class="text-center mb-8">
-            <div
-                class="inline-flex items-center space-x-4 bg-white/80 backdrop-blur-sm px-8 py-3 rounded-full shadow-lg border border-[#D4C5A9]">
-                <span class="text-3xl animate-bounce">🦉</span>
-                <span class="text-[#5C4033] font-semibold italic">"A sabedoria está na jornada através do tempo"</span>
-                <span class="text-3xl animate-pulse">📚</span>
+        <!-- Borda pixel art na base -->
+        <div class="hero-pixel-border"></div>
+
+        <!-- Conteúdo — LADO ESQUERDO -->
+        <div class="hero-content">
+            <div class="hero-badge">⚜ CHRONOHISTORY ⚜</div>
+            <h1 class="hero-title">
+                Explore a<br>
+                <span class="hero-title-accent">História</span><br>
+                do Mundo
+            </h1>
+            <p class="hero-desc">
+                Descubra eventos, civilizações e personagens que moldaram a humanidade ao longo dos séculos.
+            </p>
+            <div class="hero-btns">
+                <a href="#timeline-section" class="hero-btn-primary">⚔ Ver Linha do Tempo</a>
+                <a href="jogo.html" class="hero-btn-secondary">🎮 Jogar Agora</a>
             </div>
         </div>
 
+        <!-- Seta de scroll -->
+        <div class="hero-scroll-arrow"
+            onclick="document.getElementById('timeline-section').scrollIntoView({behavior:'smooth'})">
+            <div class="scroll-arrow-pixel">▼</div>
+            <div class="scroll-arrow-label">rolar</div>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 py-8 max-w-7xl" id="timeline-section">
+
         <!-- Filtros -->
-        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-10 border border-[#D4C5A9]">
-            <h2 class="text-2xl font-bold text-[#5C4033] mb-4 flex items-center">
+        <div
+            class="filter-section bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-10 border border-[#D4C5A9]">
+            <h2 class="text-3xl font-bold text-white mb-4 flex items-center">
                 <span class="text-2xl mr-2">🔍</span>
                 Filtrar Jornada Histórica
             </h2>
@@ -274,7 +422,7 @@
 
                 <div>
                     <label class="block text-sm font-semibold text-[#5C4033] mb-2">
-                        ⏳ Período Histórico
+                        📚 Período Histórico
                     </label>
                     <select id="periodoFilter"
                         class="w-full px-4 py-2 border-2 border-[#D4C5A9] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B6914] focus:border-transparent bg-[#F5F0E6] transition">
@@ -285,12 +433,12 @@
 
             <div class="flex justify-end mt-6 space-x-3">
                 <button id="limparFiltros"
-                    class="px-5 py-2 bg-[#D4C5A9] text-[#5C4033] rounded-xl hover:bg-[#C4B599] transition font-semibold shadow-md">
-                    Limpar Filtros
+                    class="px-6 py-3 bg-[#D4C5A9] text-[#5C4033] rounded-xl hover:bg-[#C4B599] transition font-semibold shadow-md text-lg">
+                    🧹 Limpar Filtros
                 </button>
                 <button id="aplicarFiltros"
-                    class="px-5 py-2 btn-primary text-white rounded-xl transition font-semibold shadow-lg">
-                    Aplicar Filtros
+                    class="px-6 py-3 btn-primary text-white rounded-xl transition font-semibold shadow-lg text-lg">
+                    🔍 Aplicar Filtros
                 </button>
             </div>
         </div>
@@ -298,15 +446,10 @@
         <!-- Linha do Tempo -->
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-[#5C4033] flex items-center">
-                    <span class="text-3xl mr-3">⏳</span>
+                <h2 class="text-3xl font-bold text-white flex items-center">
+                    <span class="text-3xl mr-3">📜</span>
                     Linha do Tempo Cronológica
                 </h2>
-                <div class="flex items-center space-x-2 text-sm bg-white/80 px-4 py-2 rounded-full shadow">
-                    <span>🦉</span>
-                    <span class="text-[#8B7355]">Role para descobrir mais eventos</span>
-                    <span class="text-lg">⬇️</span>
-                </div>
             </div>
 
             <div id="timelineContainer" class="timeline-container relative">
@@ -317,7 +460,7 @@
                 <div id="timelineItems" class="space-y-12">
                     <div class="text-center py-16">
                         <div class="loading-spinner mx-auto mb-4"></div>
-                        <p class="text-[#8B7355] text-lg">Carregando eventos históricos...</p>
+                        <p class="text-[#8B7355] text-xl">Carregando eventos históricos...</p>
                         <p class="text-sm text-[#8B7355] mt-2">🦉 A sabedoria ancestral está sendo revelada</p>
                     </div>
                 </div>
@@ -325,45 +468,7 @@
 
             <div id="loadingIndicator" class="hidden text-center py-8">
                 <div class="loading-spinner mx-auto mb-4"></div>
-                <p class="text-[#8B7355]">Carregando mais eventos históricos...</p>
-            </div>
-        </div>
-
-        <!-- Modal Saber Mais -->
-        <div id="saberMaisModal"
-            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-            <div
-                class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto transform transition-all">
-                <div
-                    class="sticky top-0 bg-gradient-to-r from-[#8B6914] to-[#A68A56] p-5 flex justify-between items-center text-white rounded-t-2xl">
-                    <h3 class="text-xl font-bold flex items-center gap-2">
-                        <span>🦉</span>
-                        Saber Mais
-                    </h3>
-                    <button id="fecharModal"
-                        class="text-white hover:text-[#E8DCC8] text-3xl transition">&times;</button>
-                </div>
-                <div id="modalContent" class="p-6">
-                </div>
-            </div>
-        </div>
-
-        <!-- Mapa Modal -->
-        <div id="mapModal"
-            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all">
-                <div
-                    class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] p-5 flex justify-between items-center text-white rounded-t-2xl">
-                    <h3 class="text-xl font-bold flex items-center gap-2">
-                        <span>🗺️</span>
-                        Localização do Evento
-                    </h3>
-                    <button id="fecharMapModal"
-                        class="text-white hover:text-[#E8DCC8] text-3xl transition">&times;</button>
-                </div>
-                <div id="mapContainer" class="p-4">
-                    <div id="map" style="height: 400px; border-radius: 12px;"></div>
-                </div>
+                <p class="text-[#8B7355] text-lg">Carregando mais eventos históricos...</p>
             </div>
         </div>
 
@@ -372,16 +477,135 @@
     <footer class="bg-[#E8DCC8] mt-16 py-8 border-t-2 border-[#D4C5A9]">
         <div class="container mx-auto px-4 text-center">
             <div class="flex justify-center items-center space-x-3 mb-3">
-                <span class="text-2xl">🦉</span>
-                <span class="text-[#5C4033] font-semibold">Chronohistory - Desvendando o passado, construindo o
+                <span class="text-2xl">🏛️</span>
+                <span class="text-[#5C4033] font-semibold text-xl">Chronohistory - Desvendando o passado, construindo o
                     futuro</span>
-                <span class="text-2xl">📜</span>
+                <span class="text-2xl">🏛️</span>
             </div>
-            <p class="text-sm text-[#8B7355]">© 2026 - Uma jornada através do tempo com sabedoria ancestral</p>
+            <p class="text-sm text-[#8B7355] text-lg">© 2026 - Uma jornada através do tempo com sabedoria ancestral</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Modal Saber Mais -->
+    <div id="saberMaisModal"
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto transform transition-all">
+            <div
+                class="sticky top-0 bg-gradient-to-r from-[#8B6914] to-[#A68A56] p-5 flex justify-between items-center text-white rounded-t-2xl">
+                <h3 class="text-xl font-bold flex items-center gap-2">
+                    <span>🦉</span>
+                    Saber Mais
+                </h3>
+                <button id="fecharModal" class="hover:text-[#E8DCC8] transition text-2xl">✕</button>
+            </div>
+            <div id="modalContent" class="p-6">
+            </div>
+        </div>
+    </div>
+
+    <!-- Mapa Modal -->
+    <div id="mapModal"
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all">
+            <div
+                class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] p-5 flex justify-between items-center text-white rounded-t-2xl">
+                <h3 class="text-xl font-bold flex items-center gap-2">
+                    <span>🗺️</span>
+                    Localização do Evento
+                </h3>
+                <button id="fecharMapModal" class="hover:text-[#E8DCC8] transition text-2xl">✕</button>
+            </div>
+            <div id="mapContainer" class="p-4">
+                <div id="map" style="height: 400px; border-radius: 12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js">
+    </script>
+
+    <!-- ═══ MEDIEVAL EFFECTS SCRIPT ═══ -->
+    <script>
+        (function () {
+            // Header scroll effect
+            var header = document.querySelector('header');
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 40) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }, { passive: true });
+
+            // Floating pixel particles
+            var particleSymbols = ['✦', '✧', '⬥', '⬦', '◆', '◇', '⚜'];
+            var colors = ['#C9A227', '#E8C84A', '#A68A56', '#F5E6C8'];
+
+            function createParticle() {
+                var p = document.createElement('div');
+                p.className = 'medieval-particle';
+                p.textContent = particleSymbols[Math.floor(Math.random() * particleSymbols.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.bottom = '-20px';
+                p.style.color = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (6 + Math.random() * 10) + 's';
+                p.style.animationDelay = (Math.random() * 4) + 's';
+                p.style.fontSize = (8 + Math.random() * 10) + 'px';
+                p.style.opacity = '0';
+                document.body.appendChild(p);
+                setTimeout(function () {
+                    if (p.parentNode) p.parentNode.removeChild(p);
+                }, 18000);
+            }
+            // Cria partículas periodicamente
+            setInterval(createParticle, 2200);
+            // Cria algumas inicialmente
+            for (var i = 0; i < 5; i++) {
+                setTimeout(createParticle, i * 400);
+            }
+        })();
+    </script>
+
+    <!-- Script para controle do menu mobile -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function () {
+                    mobileMenu.classList.toggle('hidden');
+                    if (menuBtn.innerText === "☰") {
+                        menuBtn.innerText = "X"
+
+                    }
+                    else {
+                        menuBtn.innerText = "☰"
+                    }
+                });
+            }
+
+            // Fecha o menu ao clicar em um link
+            if (mobileMenu) {
+                const mobileLinks = mobileMenu.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function () {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+
+            // Fecha o menu ao redimensionar para LG
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 1024) {
+                    if (mobileMenu) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
