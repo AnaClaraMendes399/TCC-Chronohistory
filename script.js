@@ -1,7 +1,11 @@
+// ============================================
 // API Configuration
+// ============================================
 const API_URL = 'https://backendtcccronohistory.vercel.app/periodos';
 
-// Estado global
+// ============================================
+// Estado Global
+// ============================================
 let todosPeriodos = [];
 let todosEventos = [];
 let eventosFiltrados = [];
@@ -10,13 +14,17 @@ let isLoading = false;
 let currentMap = null;
 let itemsPerLoad = 8;
 
+// ============================================
 // Inicialização
+// ============================================
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarDados();
     setupEventListeners();
 });
 
-// Carregar dados da API
+// ============================================
+// Carregar Dados da API
+// ============================================
 async function carregarDados() {
     try {
         const response = await fetch(API_URL);
@@ -52,7 +60,9 @@ async function carregarDados() {
     }
 }
 
-// Função melhorada para converter ano em número para ordenação
+// ============================================
+// Funções de Conversão de Datas
+// ============================================
 function converterAnoParaNumero(anoStr) {
     if (!anoStr || anoStr === 'Data desconhecida' || anoStr === 'Data não especificada') {
         return 9999;
@@ -84,7 +94,6 @@ function converterAnoParaNumero(anoStr) {
     return ano;
 }
 
-// Função para formatar ano para exibição
 function formatarAno(anoStr) {
     if (!anoStr) return 'Data desconhecida';
     
@@ -105,7 +114,9 @@ function formatarAno(anoStr) {
     return anoStr;
 }
 
-// Processar eventos de todos os períodos
+// ============================================
+// Processar Eventos
+// ============================================
 function processarEventos() {
     todosEventos = [];
     
@@ -115,7 +126,6 @@ function processarEventos() {
                 const anoNumerico = converterAnoParaNumero(evento.ano);
                 const anoFormatado = formatarAno(evento.ano);
                 
-                // Gerar um ID único global
                 const globalId = `${periodo.id || periodo.nome}_${evento.id || Math.random().toString(36).substr(2, 9)}`;
                 
                 todosEventos.push({
@@ -159,7 +169,6 @@ function processarEventos() {
         }
     });
     
-    // Ordenar eventos por ano numérico (cronologicamente)
     todosEventos.sort((a, b) => {
         if (a.anoNumerico !== b.anoNumerico) {
             return a.anoNumerico - b.anoNumerico;
@@ -170,7 +179,9 @@ function processarEventos() {
     console.log(`Processados ${todosEventos.length} eventos históricos em ordem cronológica`);
 }
 
-// Preencher opções dos filtros
+// ============================================
+// Filtros
+// ============================================
 function preencherFiltros() {
     const lugares = [...new Set(todosEventos.map(e => e.lugar).filter(l => l && l !== 'Regiões diversas' && l !== 'Local não especificado'))];
     const lugarSelect = document.getElementById('lugarFilter');
@@ -191,7 +202,6 @@ function preencherFiltros() {
     });
 }
 
-// Aplicar filtros
 function aplicarFiltros() {
     const lugar = document.getElementById('lugarFilter').value;
     const ano = document.getElementById('anoFilter').value.toLowerCase();
@@ -217,7 +227,9 @@ function aplicarFiltros() {
     renderTimeline();
 }
 
-// Renderizar linha do tempo com scroll infinito
+// ============================================
+// Renderizar Timeline
+// ============================================
 function renderTimeline() {
     const container = document.getElementById('timelineItems');
     const start = 0;
@@ -261,14 +273,12 @@ function renderTimeline() {
     observeTimelineItems();
 }
 
-// Adicionar evento à timeline com estilo melhorado - TEXTOS MAIORES
 function adicionarEventoTimeline(evento, container, index) {
     const itemDiv = document.createElement('div');
     itemDiv.className = 'timeline-item relative';
     itemDiv.setAttribute('data-event-id', evento.id);
     itemDiv.setAttribute('data-ano', evento.anoNumerico);
     
-    // Alternar entre esquerda e direita
     const isLeft = index % 2 === 0;
     
     const nome = evento.nome || 'Evento Histórico';
@@ -279,7 +289,6 @@ function adicionarEventoTimeline(evento, container, index) {
     
     const isPeriodoEvent = !evento.oque_aconteceu || evento.oque_aconteceu.includes('Período histórico');
     
-    // Determinar ícone baseado no tipo de evento
     let icone = '📜';
     if (isPeriodoEvent) icone = '📚';
     else if (evento.nome && (evento.nome.includes('Guerra') || evento.nome.includes('Batalha'))) icone = '⚔️';
@@ -290,15 +299,12 @@ function adicionarEventoTimeline(evento, container, index) {
     
     itemDiv.innerHTML = `
         <div class="flex flex-col md:flex-row items-start ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}">
-            <!-- Dot da linha do tempo -->
             <div class="timeline-dot absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-7 h-7 ${isPeriodoEvent ? 'bg-[#D4C5A9]' : 'bg-[#8B6914]'} rounded-full z-10"
                  style="box-shadow: 0 0 0 5px rgba(139, 105, 20, 0.25);">
             </div>
             
-            <!-- Card do evento -->
             <div class="flex-1 md:w-1/2 ${isLeft ? 'md:pr-16 md:pl-8' : 'md:pl-16 md:pr-8'} pl-16 md:pl-0">
                 <div class="timeline-card p-7 cursor-pointer">
-                    <!-- Cabeçalho do card - TÍTULO GRANDE -->
                     <div class="flex justify-between items-start mb-5 flex-wrap gap-3">
                         <h3 class="text-4xl font-bold text-[#5C4033] flex items-center gap-3">
                             <span class="text-3xl">${icone}</span>
@@ -309,12 +315,10 @@ function adicionarEventoTimeline(evento, container, index) {
                         </span>
                     </div>
                     
-                    <!-- Descrição - TEXTO GRANDE E VISÍVEL -->
                     <p class="text-[#5C4033] mb-5 leading-relaxed line-clamp-3 text-2xl font-medium">
                         ${escapeHtml(descricao)}
                     </p>
                     
-                    <!-- Tags informativas - TEXTO MAIOR -->
                     <div class="flex flex-wrap gap-3 mb-5">
                         <span class="text-base bg-[#F5F0E6] px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm tag-text font-medium">
                             <span class="text-lg">📍</span> ${escapeHtml(lugar)}
@@ -329,7 +333,6 @@ function adicionarEventoTimeline(evento, container, index) {
                         ` : ''}
                     </div>
                     
-                    <!-- Botões de ação - TEXTO MAIOR -->
                     <div class="flex gap-4 mt-5 flex-wrap">
                         <button onclick="abrirSaberMais('${evento.globalId}')" 
                                 class="btn-primary px-7 py-3.5 text-white rounded-xl font-semibold flex items-center gap-2 shadow-md action-btn text-lg">
@@ -348,7 +351,6 @@ function adicionarEventoTimeline(evento, container, index) {
     container.appendChild(itemDiv);
 }
 
-// Função para escapar HTML
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -356,9 +358,10 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Abrir modal "Saber Mais" - CORRIGIDO
+// ============================================
+// Função Saber Mais
+// ============================================
 async function abrirSaberMais(globalId) {
-    // Encontrar evento usando globalId
     const evento = todosEventos.find(e => e.globalId === globalId);
     if (!evento) {
         console.error('Evento não encontrado com globalId:', globalId);
@@ -368,7 +371,6 @@ async function abrirSaberMais(globalId) {
     const modal = document.getElementById('saberMaisModal');
     const modalContent = document.getElementById('modalContent');
     
-    // Mostrar loading
     modalContent.innerHTML = `
         <div class="text-center py-8">
             <div class="loading-spinner mx-auto mb-4"></div>
@@ -381,7 +383,6 @@ async function abrirSaberMais(globalId) {
     modal.classList.add('flex');
     
     try {
-        // 🔥 CORREÇÃO AQUI: Passando o nome do evento como "periodo"
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
@@ -399,7 +400,6 @@ async function abrirSaberMais(globalId) {
         
         let informacoes = null;
         
-        // Extrair informações da resposta
         if (data.informações) {
             informacoes = data.informações.periodo_unico || data.informações;
         } else if (data.periodo_unico) {
@@ -410,14 +410,11 @@ async function abrirSaberMais(globalId) {
             informacoes = data.periodo;
         }
         
-        // Se ainda não tiver informações, usar o próprio data
         if (!informacoes && typeof data === 'object') {
             informacoes = data;
         }
         
-        // Se tiver informações, exibir
         if (informacoes && Object.keys(informacoes).length > 0) {
-            // Tentar extrair dados relevantes
             const caracteristicas = informacoes.caracteristicas_principais || 
                                    informacoes.caracteristicas || 
                                    informacoes.características || 
@@ -502,7 +499,6 @@ async function abrirSaberMais(globalId) {
                 </div>
             `;
         } else {
-            // Se não encontrou informações, mostrar o que temos
             modalContent.innerHTML = `
                 <div class="space-y-4">
                     <div class="border-b border-[#D4C5A9] pb-3">
@@ -547,81 +543,294 @@ async function abrirSaberMais(globalId) {
     }
 }
 
-// 🔥 FUNÇÃO MAPA CORRIGIDA - COM COORDENADAS COMPLETAS
-function mostrarMapa(lugar, nomeEvento) {
-    console.log('📍 Mostrando mapa para:', lugar, nomeEvento);
+// ============================================
+// ============================================
+// FUNÇÕES DO MAPA - VERSÃO COMPLETA E MELHORADA
+// ============================================
+// ============================================
+
+// ---------- COORDENADAS PRECISAS ----------
+function obterCoordenadas(lugar) {
+    if (!lugar) return { lat: 0, lng: 0 };
     
-    const modal = document.getElementById('mapModal');
-    const mapContainer = document.getElementById('map');
+    const lugarLower = lugar.toLowerCase().trim();
     
-    if (!modal || !mapContainer) {
-        console.error('❌ Modal ou container do mapa não encontrado');
-        return;
+    // Dicionário completo de coordenadas
+    const coordenadas = {
+        // ===== BRASIL - CIDADES =====
+        'brasil': { lat: -14.2350, lng: -51.9253 },
+        'rio de janeiro': { lat: -22.9068, lng: -43.1729 },
+        'são paulo': { lat: -23.5505, lng: -46.6333 },
+        'brasilia': { lat: -15.7975, lng: -47.8919 },
+        'salvador': { lat: -12.9777, lng: -38.5016 },
+        'recife': { lat: -8.0476, lng: -34.8770 },
+        'fortaleza': { lat: -3.7327, lng: -38.5270 },
+        'belo horizonte': { lat: -19.9191, lng: -43.9386 },
+        'porto alegre': { lat: -30.0346, lng: -51.2177 },
+        'curitiba': { lat: -25.4296, lng: -49.2713 },
+        'manaus': { lat: -3.1190, lng: -60.0217 },
+        'florianópolis': { lat: -27.5949, lng: -48.5482 },
+        'vitória': { lat: -20.2976, lng: -40.2958 },
+        'natal': { lat: -5.7793, lng: -35.2009 },
+        'maceió': { lat: -9.6498, lng: -35.7089 },
+        'joão pessoa': { lat: -7.1195, lng: -34.8450 },
+        'teresina': { lat: -5.0892, lng: -42.8016 },
+        'campo grande': { lat: -20.4697, lng: -54.6201 },
+        'goiânia': { lat: -16.6869, lng: -49.2648 },
+        'cuiabá': { lat: -15.5989, lng: -56.0949 },
+        'ribeirão preto': { lat: -21.1699, lng: -47.8099 },
+        'uberlândia': { lat: -18.9186, lng: -48.2772 },
+        'são josé dos campos': { lat: -23.1896, lng: -45.8841 },
+        'campinas': { lat: -22.9068, lng: -47.0616 },
+        'santos': { lat: -23.9608, lng: -46.3322 },
+        'são luís': { lat: -2.5387, lng: -44.2829 },
+        'aracaju': { lat: -10.9472, lng: -37.0731 },
+        'palmas': { lat: -10.2491, lng: -48.3243 },
+        'boa vista': { lat: 2.8235, lng: -60.6758 },
+        'porto velho': { lat: -8.7608, lng: -63.8999 },
+        'rio branco': { lat: -9.9754, lng: -67.8249 },
+        'macapá': { lat: 0.0349, lng: -51.0694 },
+        
+        // ===== EUROPA - CIDADES =====
+        'paris': { lat: 48.8566, lng: 2.3522 },
+        'roma': { lat: 41.9028, lng: 12.4964 },
+        'londres': { lat: 51.5074, lng: -0.1278 },
+        'lisboa': { lat: 38.7223, lng: -9.1393 },
+        'madrid': { lat: 40.4168, lng: -3.7038 },
+        'berlim': { lat: 52.5200, lng: 13.4050 },
+        'atenas': { lat: 37.9838, lng: 23.7275 },
+        'viena': { lat: 48.2082, lng: 16.3738 },
+        'praga': { lat: 50.0755, lng: 14.4378 },
+        'budapeste': { lat: 47.4979, lng: 19.0402 },
+        'varsóvia': { lat: 52.2297, lng: 21.0122 },
+        'estocolmo': { lat: 59.3293, lng: 18.0686 },
+        'oslo': { lat: 59.9139, lng: 10.7522 },
+        'copenhague': { lat: 55.6761, lng: 12.5683 },
+        'bruxelas': { lat: 50.8503, lng: 4.3517 },
+        'amsterdã': { lat: 52.3676, lng: 4.9041 },
+        'amsterdao': { lat: 52.3676, lng: 4.9041 },
+        'dublin': { lat: 53.3498, lng: -6.2603 },
+        'edimburgo': { lat: 55.9533, lng: -3.1883 },
+        'manchester': { lat: 53.4808, lng: -2.2426 },
+        'barcelona': { lat: 41.3851, lng: 2.1734 },
+        'valência': { lat: 39.4699, lng: -0.3763 },
+        'valencia': { lat: 39.4699, lng: -0.3763 },
+        'sevilha': { lat: 37.3891, lng: -5.9845 },
+        'porto': { lat: 41.1579, lng: -8.6291 },
+        'coimbra': { lat: 40.2033, lng: -8.4103 },
+        'milão': { lat: 45.4642, lng: 9.1900 },
+        'milan': { lat: 45.4642, lng: 9.1900 },
+        'florença': { lat: 43.7696, lng: 11.2558 },
+        'venza': { lat: 45.4408, lng: 12.3155 },
+        'nápoles': { lat: 40.8518, lng: 14.2681 },
+        'genebra': { lat: 46.2044, lng: 6.1432 },
+        'zurique': { lat: 47.3769, lng: 8.5417 },
+        
+        // ===== AMÉRICA DO NORTE =====
+        'nova york': { lat: 40.7128, lng: -74.0060 },
+        'los angeles': { lat: 34.0522, lng: -118.2437 },
+        'chicago': { lat: 41.8781, lng: -87.6298 },
+        'miami': { lat: 25.7617, lng: -80.1918 },
+        'toronto': { lat: 43.6532, lng: -79.3832 },
+        'vancouver': { lat: 49.2827, lng: -123.1207 },
+        'montreal': { lat: 45.5017, lng: -73.5673 },
+        'mexico city': { lat: 19.4326, lng: -99.1332 },
+        'cidade do méxico': { lat: 19.4326, lng: -99.1332 },
+        'cancún': { lat: 21.1619, lng: -86.8515 },
+        'guadalajara': { lat: 20.6597, lng: -103.3496 },
+        'monterrey': { lat: 25.6866, lng: -100.3161 },
+        'los cabos': { lat: 23.0594, lng: -109.7078 },
+        'tijuana': { lat: 32.5149, lng: -117.0382 },
+        
+        // ===== AMÉRICA DO SUL =====
+        'buenos aires': { lat: -34.6037, lng: -58.3816 },
+        'santiago': { lat: -33.4489, lng: -70.6693 },
+        'lima': { lat: -12.0464, lng: -77.0428 },
+        'bogotá': { lat: 4.7110, lng: -74.0721 },
+        'caracas': { lat: 10.4806, lng: -66.9036 },
+        'montevidéu': { lat: -34.9011, lng: -56.1645 },
+        'montevideu': { lat: -34.9011, lng: -56.1645 },
+        'assunção': { lat: -25.2637, lng: -57.5759 },
+        'assuncao': { lat: -25.2637, lng: -57.5759 },
+        'la paz': { lat: -16.5000, lng: -68.1500 },
+        'quito': { lat: -0.1807, lng: -78.4678 },
+        'medellín': { lat: 6.2442, lng: -75.5812 },
+        'cartagena': { lat: 10.3910, lng: -75.4794 },
+        'barranquilla': { lat: 10.9685, lng: -74.7813 },
+        'rosário': { lat: -32.9468, lng: -60.6393 },
+        'cordoba': { lat: -31.4201, lng: -64.1888 },
+        'valparaíso': { lat: -33.0472, lng: -71.6127 },
+        
+        // ===== ÁSIA =====
+        'pequim': { lat: 39.9042, lng: 116.4074 },
+        'toquio': { lat: 35.6762, lng: 139.6503 },
+        'seul': { lat: 37.5665, lng: 126.9780 },
+        'xangai': { lat: 31.2304, lng: 121.4737 },
+        'hong kong': { lat: 22.3193, lng: 114.1694 },
+        'bangcoc': { lat: 13.7563, lng: 100.5018 },
+        'cidade de singapura': { lat: 1.3521, lng: 103.8198 },
+        'mumbai': { lat: 19.0760, lng: 72.8777 },
+        'nova delhi': { lat: 28.6139, lng: 77.2090 },
+        'dubai': { lat: 25.2048, lng: 55.2708 },
+        'teerã': { lat: 35.6892, lng: 51.3890 },
+        'teera': { lat: 35.6892, lng: 51.3890 },
+        'bagdá': { lat: 33.3152, lng: 44.3661 },
+        'bagda': { lat: 33.3152, lng: 44.3661 },
+        'jerusalém': { lat: 31.7683, lng: 35.2137 },
+        'jerusalem': { lat: 31.7683, lng: 35.2137 },
+        'ancara': { lat: 39.9334, lng: 32.8597 },
+        'istambul': { lat: 41.0082, lng: 28.9784 },
+        'bangkok': { lat: 13.7563, lng: 100.5018 },
+        'jacarta': { lat: -6.2088, lng: 106.8456 },
+        'manila': { lat: 14.5995, lng: 120.9842 },
+        'cidade de ho chi minh': { lat: 10.8231, lng: 106.6297 },
+        'cidade de hanoi': { lat: 21.0278, lng: 105.8342 },
+        'taipé': { lat: 25.0330, lng: 121.5654 },
+        'taipei': { lat: 25.0330, lng: 121.5654 },
+        
+        // ===== ÁFRICA =====
+        'cairo': { lat: 30.0444, lng: 31.2357 },
+        'alexandria': { lat: 31.2001, lng: 29.9187 },
+        'cidade do cabo': { lat: -33.9249, lng: 18.4241 },
+        'joanesburgo': { lat: -26.2041, lng: 28.0473 },
+        'nairobi': { lat: -1.2921, lng: 36.8219 },
+        'lagos': { lat: 6.5244, lng: 3.3792 },
+        'casablanca': { lat: 33.5731, lng: -7.5898 },
+        'túnis': { lat: 36.8065, lng: 10.1815 },
+        'tunis': { lat: 36.8065, lng: 10.1815 },
+        'dacar': { lat: 14.7167, lng: -17.4677 },
+        'abidjan': { lat: 5.3595, lng: -4.0083 },
+        'acra': { lat: 5.6037, lng: -0.1870 },
+        'addis ababa': { lat: 9.0320, lng: 38.7469 },
+        'kampala': { lat: 0.3476, lng: 32.5825 },
+        'dar es salaam': { lat: -6.7924, lng: 39.2083 },
+        'maputo': { lat: -25.9692, lng: 32.5732 },
+        'luanda': { lat: -8.8390, lng: 13.2894 },
+        'windhoek': { lat: -22.5609, lng: 17.0658 },
+        'gaborone': { lat: -24.6282, lng: 25.9231 },
+        
+        // ===== OCEANIA =====
+        'sydney': { lat: -33.8688, lng: 151.2093 },
+        'melbourne': { lat: -37.8136, lng: 144.9631 },
+        'auckland': { lat: -36.8485, lng: 174.7633 },
+        'brisbane': { lat: -27.4698, lng: 153.0251 },
+        'perth': { lat: -31.9505, lng: 115.8605 },
+        'wellington': { lat: -41.2865, lng: 174.7762 },
+        'christchurch': { lat: -43.5321, lng: 172.6362 },
+        
+        // ===== PAÍSES =====
+        'frança': { lat: 46.6034, lng: 1.8883 },
+        'franca': { lat: 46.6034, lng: 1.8883 },
+        'portugal': { lat: 39.3999, lng: -8.2245 },
+        'espanha': { lat: 40.4637, lng: -3.7492 },
+        'italia': { lat: 41.8719, lng: 12.5674 },
+        'alemanha': { lat: 51.1657, lng: 10.4515 },
+        'inglaterra': { lat: 51.5074, lng: -0.1278 },
+        'reino unido': { lat: 51.5074, lng: -0.1278 },
+        'egito': { lat: 26.8206, lng: 30.8025 },
+        'grécia': { lat: 39.0742, lng: 21.8243 },
+        'greece': { lat: 39.0742, lng: 21.8243 },
+        'china': { lat: 35.8617, lng: 104.1954 },
+        'japão': { lat: 36.2048, lng: 138.2529 },
+        'japao': { lat: 36.2048, lng: 138.2529 },
+        'india': { lat: 20.5937, lng: 78.9629 },
+        'rússia': { lat: 61.5240, lng: 105.3188 },
+        'russia': { lat: 61.5240, lng: 105.3188 },
+        'estados unidos': { lat: 37.0902, lng: -95.7129 },
+        'méxico': { lat: 23.6345, lng: -102.5528 },
+        'mexico': { lat: 23.6345, lng: -102.5528 },
+        'argentina': { lat: -38.4161, lng: -63.6167 },
+        'peru': { lat: -9.1900, lng: -75.0152 },
+        'colômbia': { lat: 4.5709, lng: -74.2973 },
+        'colombia': { lat: 4.5709, lng: -74.2973 },
+        'austrália': { lat: -25.2744, lng: 133.7751 },
+        'australia': { lat: -25.2744, lng: 133.7751 },
+        'nova zelândia': { lat: -40.9006, lng: 174.8860 },
+        'nova zelandia': { lat: -40.9006, lng: 174.8860 },
+        'suiça': { lat: 46.8182, lng: 8.2275 },
+        'suica': { lat: 46.8182, lng: 8.2275 },
+        'holanda': { lat: 52.1326, lng: 5.2913 },
+        'bélgica': { lat: 50.5039, lng: 4.4699 },
+        'belgica': { lat: 50.5039, lng: 4.4699 },
+        'áustria': { lat: 47.5162, lng: 14.5501 },
+        'austria': { lat: 47.5162, lng: 14.5501 },
+        'suécia': { lat: 60.1282, lng: 18.6435 },
+        'suecia': { lat: 60.1282, lng: 18.6435 },
+        'noruega': { lat: 60.4720, lng: 8.4689 },
+        'dinamarca': { lat: 56.2639, lng: 9.5018 },
+        'polônia': { lat: 51.9194, lng: 19.1451 },
+        'polonia': { lat: 51.9194, lng: 19.1451 },
+        'turquia': { lat: 38.9637, lng: 35.2433 },
+        
+        // ===== REGIÕES HISTÓRICAS =====
+        'mesopotâmia': { lat: 33.2232, lng: 43.6793 },
+        'mesopotamia': { lat: 33.2232, lng: 43.6793 },
+        'egito antigo': { lat: 26.8206, lng: 30.8025 },
+        'grécia antiga': { lat: 39.0742, lng: 21.8243 },
+        'roma antiga': { lat: 41.9028, lng: 12.4964 },
+        'império romano': { lat: 41.9028, lng: 12.4964 },
+        'china antiga': { lat: 35.8617, lng: 104.1954 },
+        'india antiga': { lat: 20.5937, lng: 78.9629 },
+        'pérsia': { lat: 32.4279, lng: 53.6880 },
+        'persia': { lat: 32.4279, lng: 53.6880 },
+        'constantinopla': { lat: 41.0082, lng: 28.9784 },
+        'império asteca': { lat: 19.4326, lng: -99.1332 },
+        'império maia': { lat: 17.5046, lng: -88.1962 },
+        'império inca': { lat: -13.5167, lng: -71.9781 },
+        'cuzco': { lat: -13.5167, lng: -71.9781 },
+        'machu picchu': { lat: -13.1631, lng: -72.5450 },
+        'chichen itza': { lat: 20.6843, lng: -88.5678 },
+        'tikal': { lat: 17.2221, lng: -89.6237 },
+        
+        // ===== CONTINENTES =====
+        'europa': { lat: 48.8566, lng: 2.3522 },
+        'ásia': { lat: 35.8617, lng: 104.1954 },
+        'asia': { lat: 35.8617, lng: 104.1954 },
+        'áfrica': { lat: 8.7832, lng: 34.5085 },
+        'africa': { lat: 8.7832, lng: 34.5085 },
+        'américa do sul': { lat: -15.7975, lng: -47.8919 },
+        'america do sul': { lat: -15.7975, lng: -47.8919 },
+        'américa do norte': { lat: 37.0902, lng: -95.7129 },
+        'america do norte': { lat: 37.0902, lng: -95.7129 },
+        'américa': { lat: 37.0902, lng: -95.7129 },
+        'america': { lat: 37.0902, lng: -95.7129 },
+        'oceania': { lat: -33.8688, lng: 151.2093 },
+    };
+    
+    // Busca por correspondência exata ou parcial
+    for (const [key, coords] of Object.entries(coordenadas)) {
+        if (lugarLower === key || lugarLower.includes(key)) {
+            return coords;
+        }
     }
     
-    // Mostrar o modal
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    
-    // Pequeno delay para garantir que o modal esteja visível
-    setTimeout(() => {
-        try {
-            // Remover mapa anterior se existir
-            if (currentMap) {
-                currentMap.remove();
-                currentMap = null;
-            }
-            
-            // Obter coordenadas
-            const coordenadas = obterCoordenadas(lugar);
-            console.log('📍 Coordenadas obtidas:', coordenadas);
-            
-            // Se as coordenadas forem 0,0 (default), tentar buscar por geocoding
-            if (coordenadas.lat === 0 && coordenadas.lng === 0) {
-                console.log('⚠️ Coordenadas padrão, tentando geocoding...');
-                buscarCoordenadasPorNome(lugar, nomeEvento);
-                return;
-            }
-            
-            // Criar novo mapa
-            currentMap = L.map('map').setView([coordenadas.lat, coordenadas.lng], 6);
-            
-            // Adicionar camada do mapa
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(currentMap);
-            
-            // Adicionar marcador
-            const marker = L.marker([coordenadas.lat, coordenadas.lng])
-                .bindPopup(`
-                    <div style="font-family: 'Lato', sans-serif; text-align: center;">
-                        <strong style="color: #5C4033; font-size: 1.2rem; display: block; margin-bottom: 4px;">${escapeHtml(nomeEvento)}</strong>
-                        <span style="color: #8B7355; font-size: 1.1rem;">📍 ${escapeHtml(lugar)}</span>
-                    </div>
-                `)
-                .openPopup();
-            
-            // Forçar atualização do tamanho do mapa
-            setTimeout(() => {
-                if (currentMap) {
-                    currentMap.invalidateSize();
-                }
-            }, 200);
-            
-            console.log('✅ Mapa criado com sucesso!');
-            
-        } catch (error) {
-            console.error('❌ Erro ao criar mapa:', error);
-        }
-    }, 300);
+    return { lat: 0, lng: 0 };
 }
 
-// 🔥 BUSCAR COORDENADAS POR NOME (Geocoding)
+// ---------- BUSCAR COORDENADAS POR NOME (Geocoding) ----------
 function buscarCoordenadasPorNome(lugar, nomeEvento) {
     console.log('🔍 Buscando coordenadas para:', lugar);
     
-    // Tentar usar a API de geocoding do OpenStreetMap (gratuita)
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(lugar)}&format=json&limit=1`;
+    const coordsCache = obterCoordenadas(lugar);
+    if (coordsCache.lat !== 0 || coordsCache.lng !== 0) {
+        console.log('✅ Coordenadas encontradas no cache:', coordsCache);
+        criarMapaComCoordenadas(coordsCache.lat, coordsCache.lng, lugar, nomeEvento);
+        return;
+    }
+    
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(lugar)}&format=json&limit=1&accept-language=pt`;
+    
+    const mapContainer = document.getElementById('map');
+    if (mapContainer) {
+        mapContainer.innerHTML = `
+            <div class="flex items-center justify-center h-full bg-[#F5F0E6]">
+                <div class="text-center">
+                    <div class="loading-spinner mx-auto mb-4"></div>
+                    <p class="text-[#8B7355]">🔍 Buscando localização...</p>
+                </div>
+            </div>
+        `;
+    }
     
     fetch(url)
         .then(response => response.json())
@@ -631,11 +840,10 @@ function buscarCoordenadasPorNome(lugar, nomeEvento) {
             if (data && data.length > 0) {
                 const lat = parseFloat(data[0].lat);
                 const lng = parseFloat(data[0].lon);
+                const displayName = data[0].display_name || lugar;
                 
                 console.log('📍 Coordenadas encontradas:', lat, lng);
-                
-                // Criar mapa com as coordenadas encontradas
-                criarMapaComCoordenadas(lat, lng, lugar, nomeEvento);
+                criarMapaComCoordenadas(lat, lng, displayName, nomeEvento);
             } else {
                 console.log('⚠️ Local não encontrado, usando coordenadas padrão');
                 criarMapaComCoordenadas(0, 0, lugar, nomeEvento);
@@ -647,217 +855,145 @@ function buscarCoordenadasPorNome(lugar, nomeEvento) {
         });
 }
 
-// 🔥 CRIAR MAPA COM COORDENADAS
+// ---------- CRIAR MAPA COM COORDENADAS ----------
 function criarMapaComCoordenadas(lat, lng, lugar, nomeEvento) {
     try {
-        // Remover mapa anterior se existir
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer) {
+            console.error('❌ Container do mapa não encontrado');
+            return;
+        }
+        
         if (currentMap) {
             currentMap.remove();
             currentMap = null;
         }
         
-        // Se as coordenadas forem 0,0, mostrar o mundo inteiro
+        mapContainer.innerHTML = '';
+        
         const zoom = (lat === 0 && lng === 0) ? 2 : 6;
         const viewLat = (lat === 0 && lng === 0) ? 20 : lat;
         const viewLng = (lat === 0 && lng === 0) ? 0 : lng;
         
-        // Criar novo mapa
-        currentMap = L.map('map').setView([viewLat, viewLng], zoom);
+        console.log(`🗺️ Criando mapa: lat=${viewLat}, lng=${viewLng}, zoom=${zoom}`);
         
-        // Adicionar camada do mapa
+        currentMap = L.map('map', {
+            center: [viewLat, viewLng],
+            zoom: zoom,
+            zoomControl: true
+        });
+        
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(currentMap);
         
-        // Se tiver coordenadas válidas, adicionar marcador
+        // Criar ícone personalizado
+        const customIcon = L.divIcon({
+            className: 'custom-marker',
+            html: `
+                <div style="background: #8B6914; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 3px solid #5C4033; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+                    📍
+                </div>
+            `,
+            iconSize: [40, 40],
+            iconAnchor: [20, 40]
+        });
+        
         if (lat !== 0 || lng !== 0) {
-            const marker = L.marker([lat, lng])
+            const marker = L.marker([lat, lng], { icon: customIcon })
                 .bindPopup(`
-                    <div style="font-family: 'Lato', sans-serif; text-align: center;">
+                    <div style="font-family: 'Lato', sans-serif; text-align: center; min-width: 200px;">
                         <strong style="color: #5C4033; font-size: 1.2rem; display: block; margin-bottom: 4px;">${escapeHtml(nomeEvento)}</strong>
                         <span style="color: #8B7355; font-size: 1.1rem;">📍 ${escapeHtml(lugar)}</span>
+                        <div style="margin-top: 8px; font-size: 0.9rem; color: #8B7355;">
+                            📅 ${new Date().getFullYear()}
+                        </div>
                     </div>
-                `)
+                `, {
+                    maxWidth: 300
+                })
                 .openPopup();
+            
+            // Adicionar círculo de destaque
+            L.circle([lat, lng], {
+                color: '#8B6914',
+                fillColor: '#D4C5A9',
+                fillOpacity: 0.2,
+                radius: 50000
+            }).addTo(currentMap);
+            
         } else {
             // Se não tiver coordenadas, mostrar mensagem no mapa
             L.popup()
                 .setLatLng([20, 0])
                 .setContent(`
-                    <div style="text-align: center; padding: 10px;">
+                    <div style="text-align: center; padding: 15px;">
                         <span style="font-size: 3rem;">🌍</span>
-                        <p style="color: #5C4033; font-weight: bold; margin-top: 8px;">Localização não encontrada</p>
-                        <p style="color: #8B7355;">${escapeHtml(lugar)}</p>
+                        <p style="color: #5C4033; font-weight: bold; margin-top: 8px; font-size: 1.1rem;">Localização não encontrada</p>
+                        <p style="color: #8B7355; font-size: 1rem;">${escapeHtml(lugar)}</p>
+                        <p style="color: #8B7355; font-size: 0.9rem; margin-top: 5px;">Tente buscar por uma região mais específica</p>
                     </div>
                 `)
                 .openOn(currentMap);
         }
         
-        // Forçar atualização do tamanho do mapa
         setTimeout(() => {
             if (currentMap) {
                 currentMap.invalidateSize();
             }
-        }, 200);
+        }, 300);
         
         console.log('✅ Mapa criado com sucesso!');
         
     } catch (error) {
         console.error('❌ Erro ao criar mapa:', error);
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+            mapContainer.innerHTML = `
+                <div class="flex items-center justify-center h-full bg-[#F5F0E6]">
+                    <div class="text-center p-4">
+                        <span class="text-4xl">⚠️</span>
+                        <p class="text-[#8B7355] mt-2">Erro ao carregar o mapa</p>
+                        <p class="text-sm text-[#8B7355]">Tente novamente</p>
+                    </div>
+                </div>
+            `;
+        }
     }
 }
 
-// 🔥 COORDENADAS COMPLETAS - MAIS ABRANGENTE
-function obterCoordenadas(lugar) {
-    if (!lugar) return { lat: 0, lng: 0 };
+// ---------- FUNÇÃO PRINCIPAL MOSTRAR MAPA ----------
+function mostrarMapa(lugar, nomeEvento) {
+    console.log('📍 Mostrando mapa para:', lugar, nomeEvento);
     
-    const lugarLower = lugar.toLowerCase().trim();
+    const modal = document.getElementById('mapModal');
+    const mapContainer = document.getElementById('map');
     
-    // ============ PAÍSES ============
-    const paises = {
-        'frança': { lat: 46.6034, lng: 1.8883 },
-        'franca': { lat: 46.6034, lng: 1.8883 },
-        'france': { lat: 46.6034, lng: 1.8883 },
-        'brasil': { lat: -14.2350, lng: -51.9253 },
-        'brazil': { lat: -14.2350, lng: -51.9253 },
-        'portugal': { lat: 39.3999, lng: -8.2245 },
-        'espanha': { lat: 40.4637, lng: -3.7492 },
-        'spain': { lat: 40.4637, lng: -3.7492 },
-        'italia': { lat: 41.8719, lng: 12.5674 },
-        'italy': { lat: 41.8719, lng: 12.5674 },
-        'alemanha': { lat: 51.1657, lng: 10.4515 },
-        'germany': { lat: 51.1657, lng: 10.4515 },
-        'inglaterra': { lat: 51.5074, lng: -0.1278 },
-        'england': { lat: 51.5074, lng: -0.1278 },
-        'reino unido': { lat: 51.5074, lng: -0.1278 },
-        'uk': { lat: 51.5074, lng: -0.1278 },
-        'egito': { lat: 26.8206, lng: 30.8025 },
-        'egypt': { lat: 26.8206, lng: 30.8025 },
-        'grécia': { lat: 39.0742, lng: 21.8243 },
-        'greece': { lat: 39.0742, lng: 21.8243 },
-        'china': { lat: 35.8617, lng: 104.1954 },
-        'japão': { lat: 36.2048, lng: 138.2529 },
-        'japan': { lat: 36.2048, lng: 138.2529 },
-        'india': { lat: 20.5937, lng: 78.9629 },
-        'russia': { lat: 61.5240, lng: 105.3188 },
-        'estados unidos': { lat: 37.0902, lng: -95.7129 },
-        'usa': { lat: 37.0902, lng: -95.7129 },
-        'méxico': { lat: 23.6345, lng: -102.5528 },
-        'mexico': { lat: 23.6345, lng: -102.5528 },
-        'argentina': { lat: -38.4161, lng: -63.6167 },
-        'peru': { lat: -9.1900, lng: -75.0152 },
-        'colômbia': { lat: 4.5709, lng: -74.2973 },
-        'colombia': { lat: 4.5709, lng: -74.2973 },
-    };
-    
-    // ============ CIDADES ============
-    const cidades = {
-        'paris': { lat: 48.8566, lng: 2.3522 },
-        'roma': { lat: 41.9028, lng: 12.4964 },
-        'londres': { lat: 51.5074, lng: -0.1278 },
-        'lisboa': { lat: 38.7223, lng: -9.1393 },
-        'madrid': { lat: 40.4168, lng: -3.7038 },
-        'berlim': { lat: 52.5200, lng: 13.4050 },
-        'atenas': { lat: 37.9838, lng: 23.7275 },
-        'cairo': { lat: 30.0444, lng: 31.2357 },
-        'moscou': { lat: 55.7558, lng: 37.6173 },
-        'pequim': { lat: 39.9042, lng: 116.4074 },
-        'toquio': { lat: 35.6762, lng: 139.6503 },
-        'brasilia': { lat: -15.7975, lng: -47.8919 },
-        'rio de janeiro': { lat: -22.9068, lng: -43.1729 },
-        'são paulo': { lat: -23.5505, lng: -46.6333 },
-        'salvador': { lat: -12.9777, lng: -38.5016 },
-        'recife': { lat: -8.0476, lng: -34.8770 },
-        'fortaleza': { lat: -3.7327, lng: -38.5270 },
-        'belo horizonte': { lat: -19.9191, lng: -43.9386 },
-        'porto alegre': { lat: -30.0346, lng: -51.2177 },
-        'curitiba': { lat: -25.4296, lng: -49.2713 },
-        'manaus': { lat: -3.1190, lng: -60.0217 },
-        'nova york': { lat: 40.7128, lng: -74.0060 },
-        'los angeles': { lat: 34.0522, lng: -118.2437 },
-        'miami': { lat: 25.7617, lng: -80.1918 },
-        'toronto': { lat: 43.6532, lng: -79.3832 },
-        'sydney': { lat: -33.8688, lng: 151.2093 },
-        'cidade do méxico': { lat: 19.4326, lng: -99.1332 },
-        'bogotá': { lat: 4.7110, lng: -74.0721 },
-        'lima': { lat: -12.0464, lng: -77.0428 },
-        'santiago': { lat: -33.4489, lng: -70.6693 },
-        'buenos aires': { lat: -34.6037, lng: -58.3816 },
-        'jerusalém': { lat: 31.7683, lng: 35.2137 },
-        'alexandria': { lat: 31.2001, lng: 29.9187 },
-        'constantinopla': { lat: 41.0082, lng: 28.9784 },
-    };
-    
-    // ============ REGIÕES HISTÓRICAS ============
-    const regioes = {
-        'mesopotâmia': { lat: 33.2232, lng: 43.6793 },
-        'mesopotamia': { lat: 33.2232, lng: 43.6793 },
-        'egito antigo': { lat: 26.8206, lng: 30.8025 },
-        'grécia antiga': { lat: 39.0742, lng: 21.8243 },
-        'roma antiga': { lat: 41.9028, lng: 12.4964 },
-        'império romano': { lat: 41.9028, lng: 12.4964 },
-        'china antiga': { lat: 35.8617, lng: 104.1954 },
-        'india antiga': { lat: 20.5937, lng: 78.9629 },
-        'persia': { lat: 32.4279, lng: 53.6880 },
-        'américa do sul': { lat: -15.7975, lng: -47.8919 },
-        'america do sul': { lat: -15.7975, lng: -47.8919 },
-        'europa': { lat: 48.8566, lng: 2.3522 },
-        'asia': { lat: 35.8617, lng: 104.1954 },
-        'africa': { lat: 8.7832, lng: 34.5085 },
-        'américa': { lat: 37.0902, lng: -95.7129 },
-        'america': { lat: 37.0902, lng: -95.7129 },
-        'oceania': { lat: -33.8688, lng: 151.2093 },
-        'oriente médio': { lat: 29.2985, lng: 42.5510 },
-        'oriente medio': { lat: 29.2985, lng: 42.5510 },
-    };
-    
-    // ============ CONTINENTES ============
-    const continentes = {
-        'europa': { lat: 48.8566, lng: 2.3522 },
-        'asia': { lat: 35.8617, lng: 104.1954 },
-        'áfrica': { lat: 8.7832, lng: 34.5085 },
-        'africa': { lat: 8.7832, lng: 34.5085 },
-        'américa do sul': { lat: -15.7975, lng: -47.8919 },
-        'america do sul': { lat: -15.7975, lng: -47.8919 },
-        'américa do norte': { lat: 37.0902, lng: -95.7129 },
-        'america do norte': { lat: 37.0902, lng: -95.7129 },
-        'oceania': { lat: -33.8688, lng: 151.2093 },
-    };
-    
-    // ============ BUSCA ============
-    // 1. Buscar em cidades
-    for (const [key, coords] of Object.entries(cidades)) {
-        if (lugarLower.includes(key)) {
-            return coords;
-        }
+    if (!modal || !mapContainer) {
+        console.error('❌ Modal ou container do mapa não encontrado');
+        return;
     }
     
-    // 2. Buscar em países
-    for (const [key, coords] of Object.entries(paises)) {
-        if (lugarLower.includes(key)) {
-            return coords;
-        }
-    }
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
     
-    // 3. Buscar em regiões históricas
-    for (const [key, coords] of Object.entries(regioes)) {
-        if (lugarLower.includes(key)) {
-            return coords;
-        }
-    }
+    mapContainer.innerHTML = `
+        <div class="flex items-center justify-center h-full bg-[#F5F0E6]">
+            <div class="text-center">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-[#8B7355]">🗺️ Carregando mapa...</p>
+            </div>
+        </div>
+    `;
     
-    // 4. Buscar em continentes
-    for (const [key, coords] of Object.entries(continentes)) {
-        if (lugarLower.includes(key)) {
-            return coords;
-        }
-    }
-    
-    // 5. Se não encontrar, retorna default (será feita busca por geocoding)
-    return { lat: 0, lng: 0 };
+    setTimeout(() => {
+        buscarCoordenadasPorNome(lugar, nomeEvento);
+    }, 300);
 }
 
-// Scroll infinito
+// ============================================
+// Scroll Infinito
+// ============================================
 function carregarMaisEventos() {
     if (isLoading) return;
     isLoading = true;
@@ -883,7 +1019,9 @@ function observeTimelineItems() {
     items.forEach(item => observer.observe(item));
 }
 
-// Setup event listeners
+// ============================================
+// Event Listeners
+// ============================================
 function setupEventListeners() {
     document.getElementById('aplicarFiltros').addEventListener('click', () => {
         aplicarFiltros();
@@ -928,6 +1066,9 @@ function setupEventListeners() {
     });
 }
 
+// ============================================
+// Mostrar Erro
+// ============================================
 function mostrarErro(mensagem) {
     const container = document.getElementById('timelineItems');
     container.innerHTML = `
