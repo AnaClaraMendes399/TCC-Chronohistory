@@ -309,34 +309,8 @@ function renderTimeline() {
         loadingIndicator.classList.add('hidden');
         todosEventosCarregados = true;
         
-        const existingMessage = container.querySelector('.timeline-complete-message');
-        if (!existingMessage) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'timeline-complete-message text-center py-12 mt-8';
-            messageDiv.innerHTML = `
-                <div class="inline-block bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] border-2 border-[#C9A227] p-8 shadow-lg" style="border-radius: 0;">
-                    <div class="text-6xl mb-4">🏛️</div>
-                    <h3 class="text-2xl font-bold text-[#5C4033] font-['Press_Start_2P']">Fim da Jornada Histórica</h3>
-                    <p class="text-[#8B7355] text-lg mt-3 font-['Pixelify_Sans']">
-                        ${eventosFiltrados.length} eventos históricos revelados
-                    </p>
-                    <p class="text-[#8B7355] text-base mt-2 font-['Pixelify_Sans']">
-                        🦉 A sabedoria ancestral foi completamente desvendada
-                    </p>
-                    <div class="flex justify-center gap-4 mt-6 flex-wrap">
-                        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
-                                class="px-6 py-3 bg-[#C9A227] text-[#3B2A1A] font-bold border-2 border-[#3B2A1A] shadow-md hover:shadow-lg transition-all font-['Press_Start_2P'] text-sm">
-                            🔝 Voltar ao Topo
-                        </button>
-                        <button onclick="document.getElementById('limparFiltros').click()" 
-                                class="px-6 py-3 bg-[#3B2A1A] text-[#C9A227] font-bold border-2 border-[#C9A227] shadow-md hover:shadow-lg transition-all font-['Press_Start_2P'] text-sm">
-                            🔍 Ver Todos
-                        </button>
-                    </div>
-                </div>
-            `;
-            container.appendChild(messageDiv);
-        }
+        // Removido o "Fim da Jornada Histórica" - apenas esconde o loading
+        // Não adiciona mais nenhuma mensagem de fim
         
     } else {
         loadingIndicator.classList.remove('hidden');
