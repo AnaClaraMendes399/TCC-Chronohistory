@@ -12,6 +12,12 @@
         rel="stylesheet">
     <link rel="stylesheet" href="medieval.css">
     <style>
+        /* ============================================================
+           RESPONSIVIDADE COM TAILWIND + CSS PERSONALIZADO
+           MANTENDO IDENTIDADE VISUAL MEDIEVAL
+           ============================================================ */
+
+        /* ── RESET E BASE ─────────────────────────────────────────── */
         * {
             margin: 0;
             padding: 0;
@@ -19,75 +25,309 @@
         }
 
         body {
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            background: #1a1410;
+            position: relative;
+            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: transparent;
         }
 
-        /* CORREÇÃO: Esconder botão menu em telas grandes */
+        /* ── VÍDEO DE FUNDO ──────────────────────────────────────── */
+        .video-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .video-bg-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 15, 10, 0.82);
+            background-image: radial-gradient(circle at 30% 40%, rgba(139, 105, 20, 0.12) 0%, transparent 60%);
+        }
+
+        /* ── PARTÍCULAS ───────────────────────────────────────────── */
+        .medieval-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            user-select: none;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.6);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(720deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* ── HEADER RESPONSIVO ───────────────────────────────────── */
+        header {
+            background: rgba(27, 18, 9, 0.55) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border-bottom: 3px solid #C9A227 !important;
+            box-shadow: 0 4px 0 #3B2A1A, 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+            transition: all 0.4s ease !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 100 !important;
+        }
+
+        header.scrolled {
+            background: rgba(16, 10, 4, 0.92) !important;
+            border-bottom-color: #E8C84A !important;
+            box-shadow: 0 0 20px rgba(201, 162, 39, 0.3), 0 4px 0 #A68A56, 0 8px 30px rgba(0, 0, 0, 0.7) !important;
+        }
+
+        .logo-title {
+            font-family: 'Press Start 2P', serif !important;
+            background: linear-gradient(135deg, #E8C84A, #C9A227, #A68A56) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            color: transparent !important;
+            text-shadow: none !important;
+            letter-spacing: 0.05em;
+            filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.5));
+            white-space: nowrap;
+            font-size: clamp(0.6rem, 2vw, 1.2rem) !important;
+        }
+
+        .nav-link {
+            font-family: 'Press Start 2P', serif !important;
+            font-size: clamp(0.4rem, 0.8vw, 0.55rem) !important;
+            background: linear-gradient(135deg, #3B2A1A 0%, #5C4033 100%) !important;
+            color: #C9A227 !important;
+            border: 2px solid #C9A227 !important;
+            border-radius: 0 !important;
+            padding: 8px 12px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.2s ease !important;
+            box-shadow: 3px 3px 0 #A68A56, inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 1280px) {
+            .nav-link {
+                padding: 10px 18px !important;
+            }
+        }
+
+        .nav-link::before {
+            content: '⚔ ';
+            font-size: 0.6rem;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #C9A227 0%, #A68A56 100%) !important;
+            color: #3B2A1A !important;
+            transform: translate(-2px, -2px) !important;
+            box-shadow: 5px 5px 0 #3B2A1A, 0 0 15px rgba(201, 162, 39, 0.6) !important;
+        }
+
+        /* Menu Toggle */
+        .menu-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3B2A1A !important;
+            border: 2px solid #C9A227 !important;
+            border-radius: 0 !important;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            color: #C9A227 !important;
+            box-shadow: 3px 3px 0 #A68A56;
+            transition: all 0.2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 480px) {
+            .menu-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .menu-toggle {
+                width: 44px;
+                height: 44px;
+                font-size: 1.6rem;
+            }
+        }
+
         @media (min-width: 1024px) {
-            #menuBtn {
+            .menu-toggle {
                 display: none !important;
             }
         }
 
-        /* Garantir que o menu mobile fique escondido em LG */
+        .menu-toggle:hover {
+            background: #C9A227 !important;
+            color: #3B2A1A !important;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #3B2A1A;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.75rem 0 0.25rem;
+            border-top: 2px solid #C9A227 !important;
+            background: rgba(27, 18, 9, 0.97) !important;
+        }
+
+        .mobile-menu.open {
+            display: flex;
+        }
+
         @media (min-width: 1024px) {
-            #mobileMenu {
+            .mobile-menu {
                 display: none !important;
             }
         }
 
+        .mobile-link {
+            font-family: 'Press Start 2P', serif !important;
+            font-size: clamp(0.4rem, 1.5vw, 0.5rem) !important;
+            background: linear-gradient(135deg, #3B2A1A, #5C4033) !important;
+            color: #C9A227 !important;
+            border: 2px solid #C9A227 !important;
+            border-radius: 0 !important;
+            padding: 10px 16px !important;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 3px 3px 0 #A68A56 !important;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-link:hover {
+            background: linear-gradient(135deg, #C9A227, #A68A56) !important;
+            color: #3B2A1A !important;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #3B2A1A !important;
+        }
+
+        /* ── PÁGINA DO JOGO ────────────────────────────────────── */
         .pagina-jogo {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1.5rem;
+            padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 2vw, 1.5rem);
             width: 100%;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .topo-jogo {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: clamp(1rem, 2vw, 2rem);
         }
 
         .topo-jogo h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #8B6914, #5C4033);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
+            font-family: 'Press Start 2P', serif !important;
+            font-size: clamp(1.2rem, 4vw, 2.5rem) !important;
+            background: linear-gradient(135deg, #E8C84A, #C9A227, #A68A56) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            color: transparent !important;
+            text-shadow: none !important;
+            filter: drop-shadow(2px 2px 0 rgba(59, 42, 26, 0.5));
             margin-bottom: 0.5rem;
+            line-height: 1.4;
         }
 
         .topo-jogo p {
-            color: #5C4033;
-            font-size: 1.1rem;
-            opacity: 0.8;
+            font-family: 'Pixelify Sans', sans-serif !important;
+            color: #F5E6C8 !important;
+            font-size: clamp(0.8rem, 1.5vw, 1.1rem) !important;
+            opacity: 0.9;
         }
 
+        /* ── CARD DO JOGO ──────────────────────────────────────── */
         .game-card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(8px);
-            border-radius: 2rem;
-            padding: 1.5rem;
-            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.2);
+            background: rgba(59, 42, 26, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-radius: 0 !important;
+            border: 3px solid #C9A227 !important;
+            padding: clamp(0.75rem, 2vw, 1.5rem) !important;
+            box-shadow: 6px 6px 0 #3B2A1A, 0 0 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(201, 162, 39, 0.1) !important;
             width: 100%;
             transition: all 0.3s;
         }
 
+        /* ── ÁREA DO JOGO ──────────────────────────────────────── */
         .game-area {
             position: relative;
             width: 100%;
             background: #1a1a1a;
-            border-radius: 1.5rem;
+            border-radius: 0 !important;
+            border: 4px solid #A68A56 !important;
             overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 2px #3B2A1A, 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .game-area::before {
+            content: '⚔';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            color: #C9A227;
+            z-index: 25;
+            filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.8));
+            animation: swordPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes swordPulse {
+            0%,
+            100% {
+                filter: drop-shadow(0 0 4px rgba(201, 162, 39, 0.4));
+            }
+            50% {
+                filter: drop-shadow(0 0 12px rgba(201, 162, 39, 0.9));
+            }
         }
 
         .gm4html5_div_class {
@@ -108,44 +348,69 @@
             cursor: pointer;
         }
 
-        /* ═══ PLAY OVERLAY ═══ */
+        /* ── PLAY OVERLAY ──────────────────────────────────────── */
         .play-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 6, 2, 0.92) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
             z-index: 20;
             transition: opacity 0.3s ease;
-            border-radius: 1.5rem;
+            border-radius: 0 !important;
+        }
+
+        .play-overlay::before {
+            content: '🏰 CHRONOHISTORY 🏰';
+            position: absolute;
+            top: clamp(10px, 2vw, 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', serif;
+            font-size: clamp(0.4rem, 1.2vw, 0.65rem);
+            color: #C9A227;
+            text-shadow: 2px 2px 0 #3B2A1A;
+            white-space: nowrap;
+            filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.6));
         }
 
         .play-overlay button {
-            background: linear-gradient(135deg, #8B6914, #A68A56);
-            border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-radius: 60px;
-            color: white;
+            font-family: 'Press Start 2P', serif !important;
+            font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
+            background: linear-gradient(135deg, #C9A227, #A68A56) !important;
+            color: #3B2A1A !important;
+            border: 3px solid #3B2A1A !important;
+            border-radius: 0 !important;
+            padding: clamp(10px, 2vw, 16px) clamp(20px, 4vw, 32px) !important;
+            box-shadow: 5px 5px 0 #3B2A1A, 0 0 20px rgba(201, 162, 39, 0.4) !important;
+            text-transform: uppercase;
+            transition: all 0.15s ease !important;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 12px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            gap: clamp(0.3rem, 1vw, 0.75rem);
         }
 
         .play-overlay button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+            transform: translate(-2px, -2px) scale(1.02) !important;
+            box-shadow: 7px 7px 0 #3B2A1A, 0 0 30px rgba(201, 162, 39, 0.6) !important;
+        }
+
+        .play-overlay button:active {
+            transform: translate(2px, 2px) !important;
+            box-shadow: 1px 1px 0 #3B2A1A !important;
+        }
+
+        .play-overlay .play-icon {
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
         }
 
         .play-overlay.escondido {
@@ -154,40 +419,41 @@
             pointer-events: none;
         }
 
-        /* ═══ BOTÕES OVERLAY ═══ */
+        /* ── BOTÕES OVERLAY ────────────────────────────────────── */
         .game-overlay-btns {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: clamp(8px, 1.5vw, 12px);
+            right: clamp(8px, 1.5vw, 12px);
             display: flex;
-            gap: 8px;
+            gap: clamp(4px, 1vw, 8px);
             z-index: 30;
         }
 
         .game-overlay-btn {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(6px) !important;
+            -webkit-backdrop-filter: blur(6px) !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            width: clamp(30px, 5vw, 40px);
+            height: clamp(30px, 5vw, 40px);
+            border-radius: 0 !important;
             display: flex !important;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
             cursor: pointer;
             transition: all 0.25s ease;
             text-decoration: none;
             user-select: none;
-            font-weight: 400;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-family: 'Press Start 2P', serif !important;
         }
 
         .game-overlay-btn:hover {
-            background: rgba(139, 105, 20, 0.85);
+            background: rgba(139, 105, 20, 0.85) !important;
             transform: scale(1.15);
-            border-color: rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.6) !important;
             box-shadow: 0 0 25px rgba(139, 105, 20, 0.4);
         }
 
@@ -195,78 +461,92 @@
             transform: scale(0.9);
         }
 
-        /* Botão Sair - vermelho no hover */
         #exitBtn:hover {
             background: rgba(200, 50, 50, 0.85) !important;
-            border-color: #ff6666;
+            border-color: #ff6666 !important;
         }
 
-        /* ═══ CONTROLES ═══ */
+        /* ── CONTROLES ──────────────────────────────────────────── */
         .controles-jogo {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(139, 105, 20, 0.15);
-            border-radius: 1rem;
-            backdrop-filter: blur(4px);
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+            padding: clamp(0.5rem, 1.5vw, 1rem);
+            background: rgba(59, 42, 26, 0.6) !important;
+            backdrop-filter: blur(4px) !important;
+            -webkit-backdrop-filter: blur(4px) !important;
+            border: 2px solid #A68A56 !important;
+            border-radius: 0 !important;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4) !important;
         }
 
         .titulo-controles {
+            font-family: 'Press Start 2P', serif !important;
+            font-size: clamp(0.4rem, 1vw, 0.55rem) !important;
+            color: #C9A227 !important;
+            text-shadow: 1px 1px 0 #3B2A1A !important;
+            letter-spacing: 0.08em;
             text-align: center;
-            font-weight: bold;
-            color: #5C4033;
-            margin-bottom: 1rem;
-            font-size: 1rem;
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
         }
 
         .grade-controles {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1.5rem;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
         }
 
         .grupo-controle {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.25rem;
         }
 
         .tecla {
-            background: #2c2c2c;
-            color: #f5e6c8;
-            font-weight: bold;
-            font-family: monospace;
-            font-size: 1.2rem;
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
-            box-shadow: 0 3px 0 #5c5c5c;
-            min-width: 60px;
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a) !important;
+            color: #C9A227 !important;
+            font-family: 'Press Start 2P', monospace !important;
+            font-size: clamp(0.6rem, 1vw, 1.2rem) !important;
+            padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.6rem, 1.2vw, 1rem) !important;
+            border: 2px solid #A68A56 !important;
+            border-radius: 0 !important;
+            box-shadow: 0 4px 0 #3B2A1A, inset 0 1px 0 rgba(201, 162, 39, 0.15) !important;
+            min-width: clamp(40px, 8vw, 60px);
             text-align: center;
             letter-spacing: 1px;
+            transition: all 0.1s ease;
+        }
+
+        .tecla:active,
+        .tecla-active {
+            box-shadow: 0 1px 0 #3B2A1A !important;
+            transform: translateY(3px);
         }
 
         .descricao-tecla {
-            font-size: 0.75rem;
-            color: #5C4033;
+            font-family: 'Pixelify Sans', sans-serif !important;
+            color: #EDD9A3 !important;
+            font-size: clamp(0.5rem, 0.8vw, 0.75rem) !important;
             font-weight: 500;
         }
 
         .info-jogo {
             text-align: center;
-            margin-top: 1rem;
-            padding: 0.6rem;
-            background: #E8DCC8;
-            border-radius: 60px;
-            color: #5C4033;
-            font-weight: 500;
-            font-size: 0.85rem;
+            margin-top: clamp(0.5rem, 1vw, 1rem);
+            padding: clamp(0.3rem, 0.6vw, 0.6rem) clamp(0.6rem, 1.2vw, 1.2rem);
+            background: linear-gradient(135deg, #3B2A1A, #5C4033) !important;
+            border: 1px solid #A68A56 !important;
+            border-radius: 0 !important;
+            color: #F5E6C8 !important;
+            font-family: 'Pixelify Sans', sans-serif !important;
+            font-size: clamp(0.55rem, 1vw, 0.85rem) !important;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4) !important;
             width: fit-content;
             margin-left: auto;
             margin-right: auto;
         }
 
-        /* ═══ TELA CHEIA ═══ */
+        /* ── TELA CHEIA ────────────────────────────────────────── */
         .game-area:fullscreen {
             width: 100vw;
             height: 100vh;
@@ -296,53 +576,59 @@
             padding-bottom: 0;
         }
 
-        /* ═══ RESPONSIVO ═══ */
-        @media (max-width: 768px) {
-            .pagina-jogo {
-                padding: 1rem;
-            }
-
-            .topo-jogo h1 {
-                font-size: 1.8rem;
-            }
-
-            .game-card {
-                padding: 0.8rem;
-            }
-
-            .play-overlay button {
-                padding: 0.6rem 1.5rem;
-                font-size: 1rem;
-            }
-
-            .game-overlay-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 1rem;
-            }
-
-            .tecla {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.8rem;
-                min-width: 45px;
-            }
-
-            .descricao-tecla {
-                font-size: 0.65rem;
-            }
-
-            .grade-controles {
-                gap: 0.8rem;
-            }
+        .game-area:fullscreen .game-overlay-btns {
+            top: 20px;
+            right: 20px;
         }
 
+        .game-area:fullscreen .game-overlay-btn {
+            width: 48px;
+            height: 48px;
+            font-size: 1.4rem;
+        }
+
+        /* ── SCROLLBAR ──────────────────────────────────────────── */
+        ::-webkit-scrollbar {
+            width: clamp(8px, 1.5vw, 14px);
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #3B2A1A;
+            border-left: 2px solid #C9A227;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #C9A227, #A68A56);
+            border: 2px solid #3B2A1A;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E8C84A;
+        }
+
+        /* ── RESPONSIVIDADE ADICIONAL ──────────────────────────── */
         @media (max-width: 480px) {
             .gm4html5_div_class {
                 padding-bottom: 56.25%;
             }
 
-            .topo-jogo h1 {
-                font-size: 1.5rem;
+            .play-overlay::before {
+                font-size: 0.35rem;
+                top: 8px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .grade-controles {
+                gap: 0.4rem;
+            }
+
+            .tecla {
+                min-width: 32px;
+                font-size: 0.5rem !important;
+                padding: 0.2rem 0.4rem !important;
+            }
+
+            .descricao-tecla {
+                font-size: 0.4rem !important;
             }
         }
     </style>
@@ -350,7 +636,7 @@
 
 <body>
 
-    <!-- ═══ BACKGROUND VIDEO ═══ -->
+    <!-- ═══ RETRO PIXEL BACKGROUND VIDEO ═══ -->
     <div class="video-bg-container">
         <video autoplay muted loop playsinline preload="auto">
             <source src="vei.mp4" type="video/mp4">
@@ -359,49 +645,42 @@
     </div>
 
     <!-- ═══ HEADER ═══ -->
-    <header class="bg-[#E8DCC8] shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 py-4">
-            <div class="flex items-center justify-between">
+    <header>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3 lg:py-4">
+            <div class="flex items-center justify-between gap-2">
                 <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <img src="logo.png" alt="Logo Chronohistory" class="h-14 w-14 object-contain">
-                    <h1 class="text-3xl sm:text-4xl font-bold text-[#5C4033]">Chronohistory</h1>
+                <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                    <img src="logo.png" alt="Logo Chronohistory" class="h-8 w-8 sm:h-10 sm:w-10 lg:h-14 lg:w-14 object-contain">
+                    <span class="logo-title">Chronohistory</span>
                 </div>
 
-                <!-- Menu Desktop - visível apenas em LG+ -->
-                <nav class="hidden lg:flex items-center space-x-4 gap-10">
-                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2 text-lg"
-                        href="index.html">
-                        Linha do tempo
-                    </a>
-                    <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-2 text-lg"
-                        href="jogo.html">
-                        Jogo Interativo
-                    </a>
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex items-center gap-3 xl:gap-4">
+                    <a class="nav-link" href="index.html">Linha do tempo</a>
+                    <a class="nav-link" href="jogo.html">Jogo Interativo</a>
                 </nav>
 
-                <!-- Botão Menu Mobile - aparece apenas em telas menores que LG -->
-                <button id="menuBtn" class="lg:hidden text-[#8B6914] text-4xl focus:outline-none">
+                <!-- Mobile Toggle -->
+                <button id="menuBtn" class="menu-toggle" aria-label="Menu">
                     ☰
                 </button>
             </div>
 
-            <!-- Menu Mobile Dropdown - visível apenas quando aberto em telas menores que LG -->
-            <nav id="mobileMenu" class="hidden lg:hidden mt-4 flex-col space-y-3 pb-4">
-                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-4 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-lg"
-                    href="index.html">
-                    Linha do tempo
-                </a>
-                <a class="bg-gradient-to-r from-[#8B6914] to-[#A68A56] text-white px-6 py-4 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-lg"
-                    href="jogo.html">
-                    Jogo Interativo
-                </a>
+            <!-- Mobile Menu -->
+            <nav id="mobileMenu" class="mobile-menu">
+                <a class="mobile-link" href="index.html">Linha do tempo</a>
+                <a class="mobile-link" href="jogo.html">Jogo Interativo</a>
             </nav>
         </div>
     </header>
 
     <!-- ═══ JOGO ═══ -->
     <main class="pagina-jogo">
+
+        <div class="topo-jogo">
+            <h1>⚔ CHRONOHISTORY ⚔</h1>
+            <p>Explore a história através desta aventura medieval!</p>
+        </div>
 
         <section class="game-card">
             <div class="game-area" id="gameArea">
@@ -438,7 +717,7 @@
                 <div class="grade-controles">
                     <div class="grupo-controle">
                         <div class="tecla">A / D</div>
-                        <div class="descricao-tecla">⇄ Andar (Esquerda/Direita)</div>
+                        <div class="descricao-tecla">⇄ Andar</div>
                     </div>
                     <div class="grupo-controle">
                         <div class="tecla">W</div>
@@ -450,13 +729,13 @@
                     </div>
                     <div class="grupo-controle">
                         <div class="tecla">ESC</div>
-                        <div class="descricao-tecla">❌ Voltar / Menu</div>
+                        <div class="descricao-tecla">❌ Voltar</div>
                     </div>
                 </div>
             </div>
 
             <div class="info-jogo">
-                💡 Dica: Clique dentro do jogo para ativar os controles. Use as setas ou WASD!
+                💡 Clique no jogo para ativar os controles. Use WASD ou setas!
             </div>
         </section>
     </main>
@@ -493,7 +772,6 @@
             }
         }
 
-        // Atualiza ícone ao sair da tela cheia pelo ESC
         function updateFullscreenButton() {
             const isFullscreen = document.fullscreenElement ||
                 document.webkitFullscreenElement ||
@@ -515,7 +793,7 @@
         // ==========================================
         // PLAY OVERLAY
         // ==========================================
-        window.onload = function () {
+        window.onload = function() {
             if (typeof GameMaker_Init !== 'undefined') {
                 GameMaker_Init();
             }
@@ -531,7 +809,7 @@
 
             if (overlay) {
                 overlay.classList.add("escondido");
-                setTimeout(function () {
+                setTimeout(function() {
                     if (overlay && overlay.parentNode) overlay.remove();
                 }, 300);
             }
@@ -549,45 +827,38 @@
         // ==========================================
         // MENU MOBILE
         // ==========================================
-        const menuBtn = document.getElementById('menuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (menuBtn && mobileMenu) {
-            menuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                mobileMenu.classList.toggle('flex');
-                if (menuBtn.innerText === "☰") {
-                    menuBtn.innerText = "X"
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
 
-                }
-                else {
-                    menuBtn.innerText = "☰"
-                }
-            });
-
-            // Fecha o menu ao clicar em um link
-            const mobileLinks = mobileMenu.querySelectorAll('a');
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', function () {
-                    mobileMenu.classList.add('hidden');
-                    mobileMenu.classList.remove('flex');
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('open');
+                    menuBtn.textContent = mobileMenu.classList.contains('open') ? '✕' : '☰';
                 });
-            });
 
-            // Fecha o menu ao redimensionar para LG
-            window.addEventListener('resize', function () {
-                if (window.innerWidth >= 1024) {
-                    mobileMenu.classList.add('hidden');
-                    mobileMenu.classList.remove('flex');
-                }
-            });
-        }
+                mobileMenu.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('open');
+                        if (menuBtn) menuBtn.textContent = '☰';
+                    });
+                });
+
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth >= 1024 && mobileMenu) {
+                        mobileMenu.classList.remove('open');
+                        if (menuBtn) menuBtn.textContent = '☰';
+                    }
+                });
+            }
+        });
 
         // ==========================================
-        // HEADER SCROLL
+        // HEADER SCROLL & PARTÍCULAS
         // ==========================================
-        (function () {
+        (function() {
             const header = document.querySelector('header');
-            window.addEventListener('scroll', function () {
+            window.addEventListener('scroll', function() {
                 if (window.scrollY > 40) {
                     header.classList.add('scrolled');
                 } else {
@@ -595,7 +866,6 @@
                 }
             }, { passive: true });
 
-            // Partículas
             const particleSymbols = ['✦', '✧', '⬥', '⬦', '◆', '◇', '⚜'];
             const colors = ['#C9A227', '#E8C84A', '#A68A56', '#F5E6C8'];
 
