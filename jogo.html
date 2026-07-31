@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="medieval.css">
     <style>
         /* ============================================================
-           RESPONSIVIDADE COM TAILWIND + CSS PERSONALIZADO
-           MANTENDO IDENTIDADE VISUAL MEDIEVAL
+           JOGO - ESTILOS PRÓPRIOS
+           Mantendo identidade visual medieval
            ============================================================ */
 
         /* ── RESET E BASE ─────────────────────────────────────────── */
@@ -89,11 +89,15 @@
 
         /* ── HEADER RESPONSIVO ───────────────────────────────────── */
         header {
-            background: rgba(27, 18, 9, 0.55) !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
+            background: rgba(27, 18, 9, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             border-bottom: 3px solid #C9A227 !important;
-            box-shadow: 0 4px 0 #3B2A1A, 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+            box-shadow:
+                0 2px 0 #A68A56,
+                0 4px 0 #3B2A1A,
+                0 6px 32px rgba(0, 0, 0, 0.6),
+                0 0 60px rgba(201, 162, 39, 0.08) !important;
             transition: all 0.4s ease !important;
             position: sticky !important;
             top: 0 !important;
@@ -101,9 +105,12 @@
         }
 
         header.scrolled {
-            background: rgba(16, 10, 4, 0.92) !important;
+            background: rgba(16, 10, 4, 0.95) !important;
             border-bottom-color: #E8C84A !important;
-            box-shadow: 0 0 20px rgba(201, 162, 39, 0.3), 0 4px 0 #A68A56, 0 8px 30px rgba(0, 0, 0, 0.7) !important;
+            box-shadow:
+                0 0 30px rgba(201, 162, 39, 0.35),
+                0 4px 0 #A68A56,
+                0 8px 40px rgba(0, 0, 0, 0.8) !important;
         }
 
         .logo-title {
@@ -116,34 +123,23 @@
             letter-spacing: 0.05em;
             filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.5));
             white-space: nowrap;
-            font-size: clamp(0.6rem, 2vw, 1.2rem) !important;
+            font-size: clamp(1rem, 2vw, 1.25rem) !important;
         }
 
         .nav-link {
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(0.4rem, 0.8vw, 0.55rem) !important;
+            font-size: clamp(0.75rem, 0.85vw, 0.95rem) !important;
             background: linear-gradient(135deg, #3B2A1A 0%, #5C4033 100%) !important;
             color: #C9A227 !important;
             border: 2px solid #C9A227 !important;
             border-radius: 0 !important;
-            padding: 8px 12px !important;
+            padding: 8px 14px !important;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.07em;
             transition: all 0.2s ease !important;
             box-shadow: 3px 3px 0 #A68A56, inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
             text-decoration: none;
             white-space: nowrap;
-        }
-
-        @media (min-width: 1280px) {
-            .nav-link {
-                padding: 10px 18px !important;
-            }
-        }
-
-        .nav-link::before {
-            content: ' ';
-            font-size: 0.6rem;
         }
 
         .nav-link:hover {
@@ -151,6 +147,12 @@
             color: #3B2A1A !important;
             transform: translate(-2px, -2px) !important;
             box-shadow: 5px 5px 0 #3B2A1A, 0 0 15px rgba(201, 162, 39, 0.6) !important;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #C9A227, #A68A56) !important;
+            color: #3B2A1A !important;
+            box-shadow: 3px 3px 0 #3B2A1A !important;
         }
 
         /* Menu Toggle */
@@ -161,9 +163,9 @@
             background: #3B2A1A !important;
             border: 2px solid #C9A227 !important;
             border-radius: 0 !important;
-            width: 36px;
-            height: 36px;
-            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            font-size: 1.3rem;
             color: #C9A227 !important;
             box-shadow: 3px 3px 0 #A68A56;
             transition: all 0.2s;
@@ -171,33 +173,15 @@
             flex-shrink: 0;
         }
 
-        @media (min-width: 480px) {
-            .menu-toggle {
-                width: 40px;
-                height: 40px;
-                font-size: 1.4rem;
-            }
-        }
-
-        @media (min-width: 640px) {
-            .menu-toggle {
-                width: 44px;
-                height: 44px;
-                font-size: 1.6rem;
-            }
+        .menu-toggle:hover {
+            background: #C9A227 !important;
+            color: #3B2A1A !important;
         }
 
         @media (min-width: 1024px) {
             .menu-toggle {
                 display: none !important;
             }
-        }
-
-        .menu-toggle:hover {
-            background: #C9A227 !important;
-            color: #3B2A1A !important;
-            transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0 #3B2A1A;
         }
 
         /* Mobile Menu */
@@ -222,7 +206,7 @@
 
         .mobile-link {
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(0.4rem, 1.5vw, 0.5rem) !important;
+            font-size: 0.95rem !important;
             background: linear-gradient(135deg, #3B2A1A, #5C4033) !important;
             color: #C9A227 !important;
             border: 2px solid #C9A227 !important;
@@ -239,8 +223,11 @@
         .mobile-link:hover {
             background: linear-gradient(135deg, #C9A227, #A68A56) !important;
             color: #3B2A1A !important;
-            transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0 #3B2A1A !important;
+        }
+
+        .mobile-link.active {
+            background: linear-gradient(135deg, #C9A227, #A68A56) !important;
+            color: #3B2A1A !important;
         }
 
         /* ── PÁGINA DO JOGO ────────────────────────────────────── */
@@ -265,7 +252,7 @@
 
         .topo-jogo h1 {
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(1.2rem, 4vw, 2.5rem) !important;
+            font-size: clamp(1.8rem, 4vw, 3.2rem) !important;
             background: linear-gradient(135deg, #E8C84A, #C9A227, #A68A56) !important;
             -webkit-background-clip: text !important;
             background-clip: text !important;
@@ -279,7 +266,7 @@
         .topo-jogo p {
             font-family: 'Inter', sans-serif !important;
             color: #F5E6C8 !important;
-            font-size: clamp(0.8rem, 1.5vw, 1.1rem) !important;
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem) !important;
             opacity: 0.9;
         }
 
@@ -288,7 +275,6 @@
             background: rgba(59, 42, 26, 0.85) !important;
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
-            border-radius: 0 !important;
             border: 3px solid #C9A227 !important;
             padding: clamp(0.75rem, 2vw, 1.5rem) !important;
             box-shadow: 6px 6px 0 #3B2A1A, 0 0 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(201, 162, 39, 0.1) !important;
@@ -301,33 +287,9 @@
             position: relative;
             width: 100%;
             background: #1a1a1a;
-            border-radius: 0 !important;
             border: 4px solid #A68A56 !important;
             overflow: hidden;
             box-shadow: 0 0 0 2px #3B2A1A, 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
-        }
-
-        .game-area::before {
-            content: '';
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: clamp(1rem, 2vw, 1.4rem);
-            color: #C9A227;
-            z-index: 25;
-            filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.8));
-            animation: swordPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes swordPulse {
-            0%,
-            100% {
-                filter: drop-shadow(0 0 4px rgba(201, 162, 39, 0.4));
-            }
-            50% {
-                filter: drop-shadow(0 0 12px rgba(201, 162, 39, 0.9));
-            }
         }
 
         .gm4html5_div_class {
@@ -365,7 +327,6 @@
             gap: clamp(0.5rem, 1.5vw, 1rem);
             z-index: 20;
             transition: opacity 0.3s ease;
-            border-radius: 0 !important;
         }
 
         .play-overlay::before {
@@ -375,21 +336,22 @@
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Inter', sans-serif;
-            font-size: clamp(0.4rem, 1.2vw, 0.65rem);
+            font-size: clamp(0.6rem, 1.2vw, 0.8rem);
             color: #C9A227;
             text-shadow: 2px 2px 0 #3B2A1A;
             white-space: nowrap;
             filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.6));
+            letter-spacing: 0.15em;
         }
 
         .play-overlay button {
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
+            font-size: clamp(1rem, 1.2vw, 1.25rem) !important;
             background: linear-gradient(135deg, #C9A227, #A68A56) !important;
             color: #3B2A1A !important;
             border: 3px solid #3B2A1A !important;
             border-radius: 0 !important;
-            padding: clamp(10px, 2vw, 16px) clamp(20px, 4vw, 32px) !important;
+            padding: clamp(12px, 2vw, 18px) clamp(24px, 4vw, 40px) !important;
             box-shadow: 5px 5px 0 #3B2A1A, 0 0 20px rgba(201, 162, 39, 0.4) !important;
             text-transform: uppercase;
             transition: all 0.15s ease !important;
@@ -397,6 +359,8 @@
             display: flex;
             align-items: center;
             gap: clamp(0.3rem, 1vw, 0.75rem);
+            letter-spacing: 0.06em;
+            font-weight: 700;
         }
 
         .play-overlay button:hover {
@@ -410,7 +374,7 @@
         }
 
         .play-overlay .play-icon {
-            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            font-size: clamp(1.2rem, 1.5vw, 1.6rem);
         }
 
         .play-overlay.escondido {
@@ -435,13 +399,13 @@
             -webkit-backdrop-filter: blur(6px) !important;
             border: 2px solid rgba(255, 255, 255, 0.2) !important;
             color: #ffffff !important;
-            width: clamp(30px, 5vw, 40px);
-            height: clamp(30px, 5vw, 40px);
+            width: clamp(36px, 5vw, 44px);
+            height: clamp(36px, 5vw, 44px);
             border-radius: 0 !important;
             display: flex !important;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
             cursor: pointer;
             transition: all 0.25s ease;
             text-decoration: none;
@@ -474,13 +438,12 @@
             backdrop-filter: blur(4px) !important;
             -webkit-backdrop-filter: blur(4px) !important;
             border: 2px solid #A68A56 !important;
-            border-radius: 0 !important;
             box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4) !important;
         }
 
         .titulo-controles {
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(0.4rem, 1vw, 0.55rem) !important;
+            font-size: clamp(0.7rem, 1vw, 0.85rem) !important;
             color: #C9A227 !important;
             text-shadow: 1px 1px 0 #3B2A1A !important;
             letter-spacing: 0.08em;
@@ -506,12 +469,13 @@
             background: linear-gradient(135deg, #2c2c2c, #1a1a1a) !important;
             color: #C9A227 !important;
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(0.6rem, 1vw, 1.2rem) !important;
-            padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.6rem, 1.2vw, 1rem) !important;
+            font-size: clamp(0.8rem, 1vw, 1.2rem) !important;
+            font-weight: 700;
+            padding: clamp(0.4rem, 0.6vw, 0.6rem) clamp(0.8rem, 1.2vw, 1.2rem) !important;
             border: 2px solid #A68A56 !important;
             border-radius: 0 !important;
             box-shadow: 0 4px 0 #3B2A1A, inset 0 1px 0 rgba(201, 162, 39, 0.15) !important;
-            min-width: clamp(40px, 8vw, 60px);
+            min-width: clamp(48px, 8vw, 64px);
             text-align: center;
             letter-spacing: 1px;
             transition: all 0.1s ease;
@@ -526,20 +490,19 @@
         .descricao-tecla {
             font-family: 'Inter', sans-serif !important;
             color: #EDD9A3 !important;
-            font-size: clamp(0.5rem, 0.8vw, 0.75rem) !important;
+            font-size: clamp(0.6rem, 0.8vw, 0.8rem) !important;
             font-weight: 500;
         }
 
         .info-jogo {
             text-align: center;
             margin-top: clamp(0.5rem, 1vw, 1rem);
-            padding: clamp(0.3rem, 0.6vw, 0.6rem) clamp(0.6rem, 1.2vw, 1.2rem);
+            padding: clamp(0.4rem, 0.6vw, 0.7rem) clamp(0.8rem, 1.2vw, 1.2rem);
             background: linear-gradient(135deg, #3B2A1A, #5C4033) !important;
             border: 1px solid #A68A56 !important;
-            border-radius: 0 !important;
             color: #F5E6C8 !important;
             font-family: 'Inter', sans-serif !important;
-            font-size: clamp(0.55rem, 1vw, 0.85rem) !important;
+            font-size: clamp(0.7rem, 1vw, 0.9rem) !important;
             box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4) !important;
             width: fit-content;
             margin-left: auto;
@@ -587,19 +550,56 @@
             font-size: 1.4rem;
         }
 
+        /* ── FOOTER ─────────────────────────────────────────────── */
+        footer {
+            background: linear-gradient(160deg, #3B2A1A 0%, #241710 50%, #3B2A1A 100%) !important;
+            border-top: 4px solid #C9A227 !important;
+            box-shadow: 0 -4px 0 #A68A56, 0 -8px 30px rgba(0, 0, 0, 0.5) !important;
+            position: relative;
+            margin-top: 3rem;
+            padding: 1.5rem 1.25rem;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, #C9A227 0px, #C9A227 8px, #3B2A1A 8px, #3B2A1A 12px);
+        }
+
+        .footer-brand {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #C9A227;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-copy {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: #EDD9A3;
+            opacity: 0.6;
+        }
+
         /* ── SCROLLBAR ──────────────────────────────────────────── */
         ::-webkit-scrollbar {
-            width: clamp(8px, 1.5vw, 14px);
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
             background: #3B2A1A;
             border-left: 2px solid #C9A227;
         }
+
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, #C9A227, #A68A56);
             border: 2px solid #3B2A1A;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #E8C84A;
         }
@@ -611,7 +611,7 @@
             }
 
             .play-overlay::before {
-                font-size: 0.35rem;
+                font-size: 0.5rem;
                 top: 8px;
             }
         }
@@ -622,13 +622,13 @@
             }
 
             .tecla {
-                min-width: 32px;
-                font-size: 0.5rem !important;
+                min-width: 36px;
+                font-size: 0.6rem !important;
                 padding: 0.2rem 0.4rem !important;
             }
 
             .descricao-tecla {
-                font-size: 0.4rem !important;
+                font-size: 0.5rem !important;
             }
         }
     </style>
@@ -636,7 +636,7 @@
 
 <body>
 
-    <!-- ═══ RETRO PIXEL BACKGROUND VIDEO ═══ -->
+    <!-- ═══ VÍDEO DE FUNDO ═══ -->
     <div class="video-bg-container">
         <video autoplay muted loop playsinline preload="auto">
             <source src="vei.mp4" type="video/mp4">
@@ -656,31 +656,32 @@
 
                 <!-- Desktop Nav -->
                 <nav class="hidden lg:flex items-center gap-3 xl:gap-4">
-                    <a class="nav-link" href="index.html">Linha do tempo</a>
-                    <a class="nav-link" href="jogo.html">Jogo Interativo</a>
+                    <a class="nav-link" href="index.html">Linha do Tempo</a>
+                    <a class="nav-link" href="galeria.html">Galeria Histórica</a>
+                    <a class="nav-link active" href="jogo.html">Jogo Interativo</a>
                 </nav>
 
                 <!-- Mobile Toggle -->
                 <button id="menuBtn" class="menu-toggle" aria-label="Menu">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-</button>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
             </div>
 
             <!-- Mobile Menu -->
             <nav id="mobileMenu" class="mobile-menu">
-                <a class="mobile-link" href="index.html">Linha do tempo</a>
-                <a class="mobile-link" href="jogo.html">Jogo Interativo</a>
+                <a class="mobile-link" href="index.html">Linha do Tempo</a>
+                <a class="mobile-link" href="galeria.html">Galeria Histórica</a>
+                <a class="mobile-link active" href="jogo.html">Jogo Interativo</a>
             </nav>
         </div>
     </header>
 
     <!-- ═══ JOGO ═══ -->
     <main class="pagina-jogo">
-
-        <div class="topo-jogo">
-            <h1>CHRONOHISTORY</h1>
-            <p>Explore a história através desta aventur!</p>
-        </div>
 
         <section class="game-card">
             <div class="game-area" id="gameArea">
@@ -694,18 +695,26 @@
                 <div class="game-overlay-btns">
                     <!-- Botão Tela Cheia -->
                     <button class="game-overlay-btn" id="fullscreenBtn" title="Tela cheia">
-                        
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
                     </button>
                     <!-- Botão Sair -->
                     <a href="index.html" class="game-overlay-btn" id="exitBtn" title="Voltar à Linha do Tempo">
-                        
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6l-12 12"></path>
+                            <path d="M6 6l12 12"></path>
+                        </svg>
                     </a>
                 </div>
 
                 <!-- Play Overlay -->
                 <div class="play-overlay" id="play-overlay">
                     <button id="btn-play" type="button" onclick="esconderTelaPlay()">
-                        <span class="play-icon"></span>
+                        <span class="play-icon">▶</span>
                         Executar jogo
                     </button>
                 </div>
@@ -717,7 +726,7 @@
                 <div class="grade-controles">
                     <div class="grupo-controle">
                         <div class="tecla">A / D</div>
-                        <div class="descricao-tecla">⇄Andar</div>
+                        <div class="descricao-tecla">Andar</div>
                     </div>
                     <div class="grupo-controle">
                         <div class="tecla">W</div>
@@ -734,10 +743,17 @@
                 </div>
             </div>
 
-            <div class="info-jogo">Clique no jogo para ativar os controles. Use WASD ou setas!
-            </div>
+            <div class="info-jogo">Clique no jogo para ativar os controles. Use WASD ou setas!</div>
         </section>
     </main>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="footer-brand">Chronohistory</p>
+            <p class="footer-copy">© 2026</p>
+        </div>
+    </footer>
 
     <!-- ═══ GAMEMAKER ═══ -->
     <script type="text/javascript" src="html5game/BLANK GAME.js?cachebust=1200711930">
@@ -762,136 +778,25 @@
                 if (document.exitFullscreen) document.exitFullscreen();
                 else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
                 else if (document.msExitFullscreen) document.msExitFullscreen();
-                
             } else {
                 if (gameArea.requestFullscreen) gameArea.requestFullscreen();
                 else if (gameArea.webkitRequestFullscreen) gameArea.webkitRequestFullscreen();
                 else if (gameArea.msRequestFullscreen) gameArea.msRequestFullscreen();
-                
             }
         }
 
-        function updateFullscreenButton() {
+        document.addEventListener('fullscreenchange', function() {
             const isFullscreen = document.fullscreenElement ||
                 document.webkitFullscreenElement ||
                 document.msFullscreenElement;
             if (fullscreenBtn) {
-                
-            }
-        }
-
-        document.addEventListener('fullscreenchange', updateFullscreenButton);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-        document.addEventListener('msfullscreenchange', updateFullscreenButton);
-
-        if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', toggleFullscreen);
-            console.log(' Botão Tela Cheia funcionando!');
-        }
-
-        // ==========================================
-        // PLAY OVERLAY
-        // ==========================================
-        window.onload = function() {
-            if (typeof GameMaker_Init !== 'undefined') {
-                GameMaker_Init();
-            }
-            const canvas = document.getElementById('canvas');
-            if (canvas) {
-                canvas.setAttribute('tabindex', '0');
-            }
-        };
-
-        function esconderTelaPlay() {
-            const overlay = document.getElementById("play-overlay");
-            const canvas = document.getElementById("canvas");
-
-            if (overlay) {
-                overlay.classList.add("escondido");
-                setTimeout(function() {
-                    if (overlay && overlay.parentNode) overlay.remove();
-                }, 300);
-            }
-
-            if (canvas) {
-                canvas.focus();
-                setTimeout(() => {
-                    if (typeof window.dispatchEvent === 'function') {
-                        window.dispatchEvent(new Event('resize'));
-                    }
-                }, 100);
-            }
-        }
-
-        // ==========================================
-        // MENU MOBILE
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuBtn = document.getElementById('menuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-
-            if (menuBtn && mobileMenu) {
-                menuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('open');
-                    menuBtn.innerHTML = mobileMenu.classList.contains('open') ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-                });
-
-                mobileMenu.querySelectorAll('a').forEach(function(link) {
-                    link.addEventListener('click', function() {
-                        mobileMenu.classList.remove('open');
-                        if (menuBtn) menuBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-                    });
-                });
-
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth >= 1024 && mobileMenu) {
-                        mobileMenu.classList.remove('open');
-                        if (menuBtn) menuBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-                    }
-                });
+                fullscreenBtn.innerHTML = isFullscreen ?
+                    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 4 20 10 20"></polyline><polyline points="20 10 20 4 14 4"></polyline><line x1="10" y1="14" x2="4" y2="20"></line><line x1="14" y1="10" x2="20" y2="4"></line></svg>' :
+                    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>';
             }
         });
-
-        // ==========================================
-        // HEADER SCROLL & PARTÍCULAS
-        // ==========================================
-        (function() {
-            const header = document.querySelector('header');
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 40) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            }, { passive: true });
-
-            const particleSymbols = ['', '', '⬥', '⬦', '◆', '◇', ''];
-            const colors = ['#C9A227', '#E8C84A', '#A68A56', '#F5E6C8'];
-
-            function createParticle() {
-                const p = document.createElement('div');
-                p.className = 'medieval-particle';
-                p.textContent = particleSymbols[Math.floor(Math.random() * particleSymbols.length)];
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.bottom = '-20px';
-                p.style.color = colors[Math.floor(Math.random() * colors.length)];
-                p.style.animationDuration = (6 + Math.random() * 10) + 's';
-                p.style.animationDelay = (Math.random() * 4) + 's';
-                p.style.fontSize = (8 + Math.random() * 10) + 'px';
-                p.style.opacity = '0';
-                document.body.appendChild(p);
-                setTimeout(() => {
-                    if (p.parentNode) p.parentNode.removeChild(p);
-                }, 18000);
-            }
-
-            setInterval(createParticle, 2200);
-            for (let i = 0; i < 5; i++) setTimeout(createParticle, i * 400);
-        })();
-
-        console.log(' Jogo carregado! Botões: Tela Cheia () e Sair () funcionando.');
-    </script>
-
-</body>
-
-</html>
+        document.addEventListener('webkitfullscreenchange', function() {
+            const isFullscreen = document.webkitFullscreenElement;
+            if (fullscreenBtn) {
+                fullscreenBtn.innerHTML = isFullscreen ?
+                    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 4 20 10 20"></polyline><polyline points="20 10 20 4 14 4"></polyline><line x1="10" y
