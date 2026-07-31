@@ -7,7 +7,7 @@
     <title>Chronohistory - Página Não Encontrada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         * {
@@ -17,7 +17,7 @@
         }
 
         body {
-            font-family: 'Lato', sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -56,7 +56,7 @@
             position: fixed;
             pointer-events: none;
             z-index: 1;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             user-select: none;
             animation: floatUp linear infinite;
             opacity: 0;
@@ -122,7 +122,7 @@
             gap: 0.75rem;
             margin-bottom: 1.5rem;
             color: #8b6914;
-            font-size: 0.9rem;
+            font-size: 1.125rem;
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 300;
@@ -137,7 +137,7 @@
         }
 
         .error-code {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             font-size: 8rem;
             font-weight: 700;
             background: linear-gradient(135deg, #8b6914, #a68a56);
@@ -151,7 +151,7 @@
         }
 
         .error-code::after {
-            content: '⚔';
+            content: '';
             position: absolute;
             font-size: 2rem;
             -webkit-text-fill-color: initial;
@@ -162,7 +162,7 @@
         }
 
         .error-code::before {
-            content: '⚔';
+            content: '';
             position: absolute;
             font-size: 2rem;
             -webkit-text-fill-color: initial;
@@ -173,7 +173,7 @@
         }
 
         .error-title {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             font-size: 2rem;
             color: #5c4033;
             margin-bottom: 0.75rem;
@@ -212,7 +212,7 @@
             border-radius: 60px;
             background: linear-gradient(135deg, #8b6914, #a68a56);
             color: #fff;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -237,7 +237,7 @@
             border-radius: 60px;
             background: transparent;
             color: #5c4033;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -258,7 +258,7 @@
 
         .error-footer {
             margin-top: 2rem;
-            font-size: 0.8rem;
+            font-size: 1rem;
             color: #8b7355;
             border-top: 1px solid rgba(139, 105, 20, 0.12);
             padding-top: 1.5rem;
@@ -285,13 +285,13 @@
             }
 
             .error-desc {
-                font-size: 0.95rem;
+                font-size: 1.125rem;
             }
 
             .btn-primary,
             .btn-secondary {
                 padding: 0.7rem 1.5rem;
-                font-size: 0.95rem;
+                font-size: 1.125rem;
                 width: 100%;
                 justify-content: center;
             }
@@ -335,11 +335,11 @@
     <div class="error-wrapper">
         <div class="error-card">
 
-            <div class="error-ornament">⚜ Chronohistory ⚜</div>
+            <div class="error-ornament"> Chronohistory </div>
 
             <div class="error-code">404</div>
 
-            <span class="error-icon">🗺️</span>
+            <span class="error-icon">�️</span>
 
             <h1 class="error-title">Página Perdida no Tempo</h1>
 
@@ -351,7 +351,7 @@
 
             <div class="error-btns">
                 <a href="/" class="btn-primary">
-                    ⚔ Voltar à Linha do Tempo
+                     Voltar à Linha do Tempo
                 </a>
             </div>
 
@@ -367,7 +367,7 @@
     <!-- ═══ PARTÍCULAS ═══ -->
     <script>
         (function () {
-            const particleSymbols = ['✦', '✧', '⬥', '⬦', '◆', '◇', '⚜', '꧁', '꧂', '☯'];
+            const particleSymbols = ['', '', '⬥', '⬦', '◆', '◇', '', '꧁', '꧂', ''];
             const colors = ['#C9A227', '#E8C84A', '#A68A56', '#F5E6C8', '#D4C5A9'];
 
             function createParticle() {

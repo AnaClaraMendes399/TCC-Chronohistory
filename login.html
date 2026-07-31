@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronohistory - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
@@ -25,22 +25,22 @@
         <div class="login-card">
 
             <!-- Ornamento -->
-            <div class="login-ornament">⚜ Acesso Chronohistory ⚜</div>
+            <div class="login-ornament"> Acesso Chronohistory </div>
 
             <!-- Logo -->
             <div class="login-logo">
                 <img src="logo.png" alt="Chronohistory Logo">
                 <h1>Chronohistory</h1>
-                <span>⚔ Desvendando o passado ⚔</span>
+                <span> Desvendando o passado </span>
             </div>
 
             <!-- Tabs: Aluno / Professor -->
             <div class="role-tabs" id="roleTabs">
                 <button class="role-tab active" data-role="aluno" id="tabAluno">
-                    <span class="tab-icon">📖</span> Aluno
+                    <span class="tab-icon">�</span> Aluno
                 </button>
                 <button class="role-tab" data-role="professor" id="tabProfessor">
-                    <span class="tab-icon">🏛️</span> Professor
+                    <span class="tab-icon">�️</span> Professor
                 </button>
             </div>
 
@@ -48,14 +48,14 @@
             <form class="login-form" id="loginForm">
                 <div class="form-group">
                     <label for="email">
-                        <span class="label-icon">✉</span> Endereço de E-mail
+                        <span class="label-icon"></span> Endereço de E-mail
                     </label>
                     <input type="email" id="email" placeholder="seu@email.com" required>
                 </div>
 
                 <div class="form-group">
                     <label for="senha">
-                        <span class="label-icon">🔑</span> Senha
+                        <span class="label-icon">�</span> Senha
                     </label>
                     <input type="password" id="senha" placeholder="••••••••" required>
                 </div>
@@ -66,7 +66,7 @@
                 </div>
 
                 <button type="submit" class="btn-login">
-                    <span>⚜</span> Entrar <span>⚜</span>
+                    <span></span> Entrar <span></span>
                 </button>
             </form>
 
@@ -88,7 +88,7 @@
             // ============================================
             //  PARTÍCULAS MEDIEVAIS
             // ============================================
-            const particleSymbols = ['✦', '✧', '⬥', '⬦', '◆', '◇', '⚜', '꧁', '꧂'];
+            const particleSymbols = ['', '', '⬥', '⬦', '◆', '◇', '', '꧁', '꧂'];
             const colors = ['#C9A227', '#E8C84A', '#A68A56', '#F5E6C8', '#D4C5A9'];
 
             function createParticle() {
@@ -166,26 +166,26 @@
                 // Simulação de login com feedback estilizado
                 const btn = form.querySelector('.btn-login');
                 const originalText = btn.innerHTML;
-                btn.innerHTML = '⏳ Autenticando...';
+                btn.innerHTML = ' Autenticando...';
                 btn.disabled = true;
                 btn.style.opacity = '0.7';
 
                 // Simula requisição
                 setTimeout(() => {
-                    btn.innerHTML = '✅ Sucesso!';
+                    btn.innerHTML = ' Sucesso!';
                     btn.style.background = 'linear-gradient(135deg, #2d7d46, #3a9d5a)';
 
                     // Mensagem com o papel selecionado
                     const roleLabel = currentRole === 'aluno' ? 'Aluno' : 'Professor';
-                    alert(`🎉 Bem-vindo, ${roleLabel}!\n\nE-mail: ${email}\nAcesso concedido à Chronohistory.`);
+                    alert(`� Bem-vindo, ${roleLabel}!\n\nE-mail: ${email}\nAcesso concedido à Chronohistory.`);
 
                     // Reseta botão
                     btn.disabled = false;
                     btn.style.opacity = '1';
                     if (currentRole === 'aluno') {
-                        btn.innerHTML = '<span>📖</span> Entrar como Aluno <span>📖</span>';
+                        btn.innerHTML = '<span>�</span> Entrar como Aluno <span>�</span>';
                     } else {
-                        btn.innerHTML = '<span>🏛️</span> Entrar como Professor <span>🏛️</span>';
+                        btn.innerHTML = '<span>�️</span> Entrar como Professor <span>�️</span>';
                     }
                     btn.style.background = 'linear-gradient(135deg, #8b6914, #a68a56)';
 
