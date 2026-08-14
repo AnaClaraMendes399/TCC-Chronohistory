@@ -379,7 +379,7 @@
 }
 
 .modal-galeria-container {
-    background: #FFFDF8;
+    background: linear-gradient(160deg, #F5E6C8 0%, #EDD9A3 50%, #D4B483 100%);
     border: 1px solid rgba(201,162,39,0.3);
     border-radius: 16px;
     box-shadow: 0 16px 60px rgba(0,0,0,0.5);
@@ -539,9 +539,9 @@
 .modal-secao-texto {
     font-family: 'Inter', sans-serif;
     font-size: 0.88rem;
-    color: #1F1A17;
+    color: #5C4033;
     line-height: 1.7;
-    background: #F4EFE6;
+    background: rgba(59, 42, 26, 0.05);
     border: 1px solid rgba(166, 138, 86, 0.15);
     border-radius: 8px;
     padding: 0.75rem 1rem;
@@ -558,7 +558,7 @@
 .modal-curiosidade-item {
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
-    color: #1F1A17;
+    color: #5C4033;
     line-height: 1.6;
     padding: 0.4rem 0.75rem;
     background: rgba(201,162,39,0.08);

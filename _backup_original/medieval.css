@@ -8,12 +8,12 @@
 
 /* ── CSS Variables ───────────────────────────────────────── */
 :root {
-  --brown-dark:    #2A2421;
-  --brown-mid:     #423630;
+  --brown-dark:    #3B2A1A;
+  --brown-mid:     #5C4033;
   --brown-light:   #8B6914;
-  --gold:          #C4A777;
-  --gold-light:    #D6B984;
-  --gold-dim:      #917E62;
+  --gold:          #C9A227;
+  --gold-light:    #E8C84A;
+  --gold-dim:      #A68A56;
   --parchment:     #F5E6C8;
   --parchment-mid: #EDD9A3;
   --parchment-dark:#D4B483;
@@ -45,6 +45,7 @@
     0 0 0 6px var(--gold-dim),
     0 0 0 9px var(--brown-dark),
     8px 8px 0 var(--brown-dark),
+    0 0 50px rgba(201,162,39,0.25),
     inset 0 0 30px rgba(0,0,0,0.8);
   padding: 48px 20px 20px 20px;
 }
@@ -56,7 +57,9 @@
   font-size: 1.4rem;
   z-index: 5;
   line-height: 1;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow:
+    0 0 10px rgba(201,162,39,0.8),
+    0 0 20px rgba(201,162,39,0.4);
   animation: swordPulse 2.5s ease-in-out infinite;
 }
 
@@ -98,7 +101,7 @@
   align-items: center;
   gap: 12px;
   white-space: nowrap;
-  box-shadow: 3px 3px 0 var(--brown-dark);
+  box-shadow: 3px 3px 0 var(--brown-dark), 0 0 15px rgba(201,162,39,0.3);
   z-index: 6;
 }
 
@@ -106,7 +109,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   color: var(--gold);
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 1px 1px 0 var(--brown-dark);
   letter-spacing: 0.1em;
 }
 
@@ -198,7 +201,7 @@ body {
   background-color: transparent !important;
   background-image: none !important;
   font-family: 'Inter', sans-serif !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   position: relative;
   overflow-x: hidden;
 }
@@ -257,23 +260,23 @@ body::after {
   pointer-events: none;
   background-image:
     /* Nuvem pixel art 1 */
-    radial-gradient(ellipse 60px 25px at 150px 30px, rgba(255,255,255,0.03) 0%, transparent 70%),
-    radial-gradient(ellipse 40px 20px at 120px 35px, rgba(255,255,255,0.02) 0%, transparent 70%),
-    radial-gradient(ellipse 35px 18px at 180px 33px, rgba(255,255,255,0.02) 0%, transparent 70%),
+    radial-gradient(ellipse 60px 25px at 150px 30px, rgba(255,255,255,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 40px 20px at 120px 35px, rgba(255,255,255,0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 35px 18px at 180px 33px, rgba(255,255,255,0.3) 0%, transparent 70%),
     /* Nuvem 2 */
-    radial-gradient(ellipse 80px 30px at 600px 25px, rgba(255,255,255,0.02) 0%, transparent 70%),
-    radial-gradient(ellipse 50px 25px at 560px 32px, rgba(255,255,255,0.01) 0%, transparent 70%),
-    radial-gradient(ellipse 45px 22px at 650px 28px, rgba(255,255,255,0.01) 0%, transparent 70%),
+    radial-gradient(ellipse 80px 30px at 600px 25px, rgba(255,255,255,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 50px 25px at 560px 32px, rgba(255,255,255,0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 45px 22px at 650px 28px, rgba(255,255,255,0.2) 0%, transparent 70%),
     /* Nuvem 3 */
-    radial-gradient(ellipse 70px 28px at 1100px 20px, rgba(255,255,255,0.02) 0%, transparent 70%),
-    radial-gradient(ellipse 45px 22px at 1060px 28px, rgba(255,255,255,0.02) 0%, transparent 70%),
+    radial-gradient(ellipse 70px 28px at 1100px 20px, rgba(255,255,255,0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 45px 22px at 1060px 28px, rgba(255,255,255,0.25) 0%, transparent 70%),
     /* Nuvem 4 */
     radial-gradient(ellipse 55px 22px at 1700px 35px, rgba(255,255,255,0.28) 0%, transparent 70%),
     radial-gradient(ellipse 35px 18px at 1660px 40px, rgba(255,255,255,0.22) 0%, transparent 70%),
     /* Nuvem 5 */
     radial-gradient(ellipse 90px 35px at 2200px 15px, rgba(255,255,255,0.32) 0%, transparent 70%),
-    radial-gradient(ellipse 60px 28px at 2150px 25px, rgba(255,255,255,0.02) 0%, transparent 70%),
-    radial-gradient(ellipse 55px 25px at 2260px 22px, rgba(255,255,255,0.02) 0%, transparent 70%);
+    radial-gradient(ellipse 60px 28px at 2150px 25px, rgba(255,255,255,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 55px 25px at 2260px 22px, rgba(255,255,255,0.25) 0%, transparent 70%);
   background-size: 2800px 80px;
   animation: moveClouds 55s linear infinite;
 }
@@ -287,13 +290,13 @@ body::after {
   z-index: -7;
   pointer-events: none;
   background-image:
-    radial-gradient(ellipse 50px 20px at 300px 20px, rgba(255,255,255,0.01) 0%, transparent 70%),
-    radial-gradient(ellipse 35px 15px at 270px 26px, rgba(255,255,255,0.01) 0%, transparent 70%),
-    radial-gradient(ellipse 60px 22px at 900px 15px, rgba(255,255,255,0.01) 0%, transparent 70%),
-    radial-gradient(ellipse 40px 18px at 860px 22px, rgba(255,255,255,0.01) 0%, transparent 70%),
-    radial-gradient(ellipse 45px 18px at 1500px 25px, rgba(255,255,255,0.01) 0%, transparent 70%),
+    radial-gradient(ellipse 50px 20px at 300px 20px, rgba(255,255,255,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 35px 15px at 270px 26px, rgba(255,255,255,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 60px 22px at 900px 15px, rgba(255,255,255,0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 40px 18px at 860px 22px, rgba(255,255,255,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 45px 18px at 1500px 25px, rgba(255,255,255,0.18) 0%, transparent 70%),
     radial-gradient(ellipse 70px 25px at 2000px 10px, rgba(255,255,255,0.22) 0%, transparent 70%),
-    radial-gradient(ellipse 40px 16px at 1950px 18px, rgba(255,255,255,0.01) 0%, transparent 70%);
+    radial-gradient(ellipse 40px 16px at 1950px 18px, rgba(255,255,255,0.18) 0%, transparent 70%);
   background-size: 2800px 60px;
   animation: moveClouds 85s linear infinite reverse;
 }
@@ -327,7 +330,8 @@ header {
   box-shadow:
     0 2px 0 var(--gold-dim),
     0 4px 0 var(--brown-dark),
-    0 6px 32px rgba(0,0,0,0.6) !important;
+    0 6px 32px rgba(0,0,0,0.6),
+    0 0 60px rgba(201,162,39,0.08) !important;
   transition: all 0.4s ease !important;
   position: sticky !important;
   top: 0 !important;
@@ -351,7 +355,7 @@ header .logo-title {
   -webkit-background-clip: text !important;
   background-clip: text !important;
   color: transparent !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: none !important;
   letter-spacing: 0.05em;
   transition: all 0.3s ease;
   filter: drop-shadow(0 0 8px rgba(201,162,39,0.5));
@@ -380,14 +384,14 @@ header nav a {
 
 header nav a:hover {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   transform: translate(-2px, -2px) !important;
-  box-shadow: 5px 5px 0 var(--brown-dark) !important;
+  box-shadow: 5px 5px 0 var(--brown-dark), 0 0 15px rgba(201,162,39,0.6) !important;
 }
 
 header nav a.active {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   box-shadow: 3px 3px 0 var(--brown-dark) !important;
 }
 
@@ -414,7 +418,7 @@ header nav a:active {
 
 .menu-toggle:hover {
   background: var(--gold) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   transform: translate(-1px,-1px);
   box-shadow: 4px 4px 0 var(--brown-dark);
 }
@@ -456,12 +460,12 @@ header nav a:active {
 
 .mobile-link:hover {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
 }
 
 .mobile-link.active {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
 }
 
 /* ============================================================
@@ -484,7 +488,7 @@ main .text-center.mb-8 > div {
     rgba(92,64,51,0.88) 50%,
     rgba(59,42,26,0.92) 100%) !important;
   border: 2px solid var(--gold) !important;
-  box-shadow: 4px 4px 0 var(--gold-dim) !important;
+  box-shadow: 4px 4px 0 var(--gold-dim), 0 0 20px rgba(201,162,39,0.2) !important;
   color: var(--parchment) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 1rem;
@@ -500,7 +504,7 @@ main .text-center.mb-8 > div {
     rgba(40,28,16,0.98) 100%) !important;
   border: 2px solid var(--gold) !important;
   backdrop-filter: blur(12px) !important;
-  box-shadow: 5px 5px 0 var(--gold-dim) !important;
+  box-shadow: 5px 5px 0 var(--gold-dim), 0 0 30px rgba(0,0,0,0.5) !important;
   padding: clamp(1rem, 2vw, 2rem) !important;
   margin-bottom: clamp(1rem, 2vw, 2rem) !important;
 }
@@ -512,7 +516,7 @@ h2.text-2xl {
   font-family: 'Inter', sans-serif !important;
   font-size: 1rem !important;
   color: var(--gold) !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 2px 2px 0 var(--brown-dark) !important;
   letter-spacing: 0.05em;
   margin-bottom: clamp(1rem, 1vw, 1.25rem);
 }
@@ -546,7 +550,7 @@ select:focus,
 input[type="text"]:focus {
   border-color: var(--gold) !important;
   outline: none !important;
-  box-shadow: 3px 3px 0 var(--gold-dim) !important;
+  box-shadow: 3px 3px 0 var(--gold-dim), 0 0 12px rgba(201,162,39,0.4) !important;
 }
 
 select option {
@@ -600,7 +604,7 @@ input::placeholder {
 .btn-primary,
 button#aplicarFiltros {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   border: 2px solid var(--brown-dark) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.9rem !important;
@@ -618,7 +622,7 @@ button#aplicarFiltros {
 button#aplicarFiltros:hover {
   background: linear-gradient(135deg, var(--gold-light), var(--gold)) !important;
   transform: translate(-2px, -2px) !important;
-  box-shadow: 5px 5px 0 var(--brown-dark) !important;
+  box-shadow: 5px 5px 0 var(--brown-dark), 0 0 15px rgba(201,162,39,0.5) !important;
 }
 
 .btn-primary:active,
@@ -667,14 +671,14 @@ button[onclick^="mostrarMapa"] {
 
 button[onclick^="abrirSaberMais"] {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   border: 2px solid var(--brown-dark) !important;
   box-shadow: 2px 2px 0 var(--brown-dark) !important;
 }
 
 button[onclick^="abrirSaberMais"]:hover {
   transform: translate(-1px,-1px) !important;
-  box-shadow: 3px 3px 0 var(--brown-dark) !important;
+  box-shadow: 3px 3px 0 var(--brown-dark), 0 0 10px rgba(201,162,39,0.4) !important;
 }
 
 button[onclick^="mostrarMapa"] {
@@ -744,7 +748,7 @@ button[onclick^="mostrarMapa"]:hover {
     var(--gold-light) 100%
   ) !important;
   width: 4px !important;
-  box-shadow: 0 0 10px rgba(201,162,39,0.75) !important;
+  box-shadow: 0 0 10px rgba(201,162,39,0.75), 0 0 28px rgba(201,162,39,0.3) !important;
   position: absolute;
   left: 0.75rem;
   top: 0;
@@ -819,15 +823,15 @@ button[onclick^="mostrarMapa"]:hover {
 .timeline-item:hover .timeline-dot {
   transform: scale(1.4) !important;
   background: var(--gold-light) !important;
-  box-shadow: 0 0 0 4px var(--gold) !important;
+  box-shadow: 0 0 0 4px var(--gold), 0 0 20px rgba(201,162,39,0.5) !important;
 }
 
 /* ── Cards da Timeline — Pergaminho ─────────────────────── */
 .timeline-card {
   background: linear-gradient(160deg,
-    rgba(245,240,230,0.97) 0%,
-    rgba(237,232,220,0.96) 40%,
-    rgba(228,222,210,0.97) 100%) !important;
+    rgba(245,230,200,0.97) 0%,
+    rgba(237,217,163,0.96) 40%,
+    rgba(228,205,140,0.97) 100%) !important;
   border: 2px solid var(--gold-dim) !important;
   border-radius: 8px !important;
   box-shadow: 0 4px 16px rgba(0,0,0,0.15) !important;
@@ -860,8 +864,8 @@ button[onclick^="mostrarMapa"]:hover {
 .timeline-card h3 {
   font-family: 'Inter', sans-serif !important;
   font-size: clamp(1rem, 1.2vw, 1.25rem) !important;
-  color: #2A2421 !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  color: var(--brown-dark) !important;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.5) !important;
   line-height: 1.7 !important;
   margin-bottom: 0.5rem;
 }
@@ -869,7 +873,7 @@ button[onclick^="mostrarMapa"]:hover {
 /* Texto de descrição */
 .timeline-card p {
   font-family: 'Inter', sans-serif !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   font-size: 0.95rem !important;
   line-height: 1.7 !important;
 }
@@ -877,7 +881,7 @@ button[onclick^="mostrarMapa"]:hover {
 /* Badge do ano */
 .year-badge {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   border: 2px solid var(--brown-dark) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.8rem !important;
@@ -1029,7 +1033,7 @@ button[onclick^="mostrarMapa"]:hover {
   font-family: 'Inter', sans-serif !important;
   font-size: 1rem !important;
   color: var(--gold) !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 1px 1px 0 var(--brown-dark) !important;
 }
 
 /* Botões fechar modal */
@@ -1053,14 +1057,14 @@ button[onclick^="mostrarMapa"]:hover {
 #fecharModal:hover,
 #fecharMapModal:hover {
   background: var(--gold) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   transform: rotate(90deg);
 }
 
 /* Conteúdo interno do modal */
 #modalContent {
   font-family: 'Inter', sans-serif !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   padding: 1.25rem !important;
   overflow-y: auto;
   max-height: calc(85vh - 80px);
@@ -1069,7 +1073,7 @@ button[onclick^="mostrarMapa"]:hover {
 #modalContent h4 {
   font-family: 'Inter', sans-serif !important;
   font-size: 1rem !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   line-height: 1.8 !important;
   font-weight: 700;
 }
@@ -1085,7 +1089,7 @@ button[onclick^="mostrarMapa"]:hover {
 #modalContent p,
 #modalContent li {
   font-family: 'Inter', sans-serif !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   font-size: 0.95rem !important;
   line-height: 1.7 !important;
 }
@@ -1157,7 +1161,7 @@ footer::before {
   font-size: 1.1rem !important;
   font-weight: 600 !important;
   color: var(--gold) !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 1px 1px 0 var(--brown-dark) !important;
   letter-spacing: 0.05em;
 }
 
@@ -1174,8 +1178,8 @@ footer::before {
 
 .filter-active {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
-  border-color: #2A2421 !important;
+  color: var(--brown-dark) !important;
+  border-color: var(--brown-dark) !important;
   box-shadow: 2px 2px 0 var(--brown-dark) !important;
 }
 
@@ -1233,7 +1237,7 @@ footer::before {
   -webkit-background-clip: text !important;
   background-clip: text !important;
   color: transparent !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: none !important;
   filter: drop-shadow(2px 2px 0 rgba(59,42,26,0.5));
   margin-bottom: 0.5rem;
   line-height: 1.4;
@@ -1252,7 +1256,7 @@ footer::before {
     rgba(59,42,26,0.97) 0%,
     rgba(40,28,16,0.98) 100%) !important;
   border: 3px solid var(--gold) !important;
-  box-shadow: 6px 6px 0 var(--brown-dark) !important;
+  box-shadow: 6px 6px 0 var(--brown-dark), 0 0 40px rgba(0,0,0,0.6) !important;
   padding: clamp(0.75rem, 2vw, 1.5rem) !important;
   width: 100%;
 }
@@ -1260,7 +1264,7 @@ footer::before {
 /* Área do jogo */
 .game-area {
   border: 4px solid var(--gold-dim) !important;
-  box-shadow: 0 0 0 2px var(--brown-dark), inset 0 0 20px rgba(0,0,0,0.5) !important;
+  box-shadow: 0 0 0 2px var(--brown-dark), 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5) !important;
   position: relative;
   width: 100%;
   background: #1a1a1a;
@@ -1317,7 +1321,7 @@ footer::before {
   font-family: 'Inter', sans-serif;
   font-size: clamp(0.6rem, 1.2vw, 0.8rem);
   color: var(--gold);
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 2px 2px 0 var(--brown-dark);
   white-space: nowrap;
   filter: drop-shadow(0 0 8px rgba(201,162,39,0.6));
   letter-spacing: 0.15em;
@@ -1327,10 +1331,10 @@ footer::before {
   font-family: 'Inter', sans-serif !important;
   font-size: clamp(1rem, 1.2vw, 1.25rem) !important;
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   border: 3px solid var(--brown-dark) !important;
   padding: clamp(12px, 2vw, 18px) clamp(24px, 4vw, 40px) !important;
-  box-shadow: 5px 5px 0 var(--brown-dark) !important;
+  box-shadow: 5px 5px 0 var(--brown-dark), 0 0 20px rgba(201,162,39,0.4) !important;
   text-transform: uppercase;
   transition: all 0.15s ease !important;
   cursor: pointer;
@@ -1344,7 +1348,7 @@ footer::before {
 
 .play-overlay button:hover {
   transform: translate(-2px, -2px) scale(1.02) !important;
-  box-shadow: 7px 7px 0 var(--brown-dark) !important;
+  box-shadow: 7px 7px 0 var(--brown-dark), 0 0 30px rgba(201,162,39,0.6) !important;
 }
 
 .play-overlay button:active {
@@ -1379,7 +1383,7 @@ footer::before {
   align-items: center;
   justify-content: center;
   font-size: clamp(1rem, 1.5vw, 1.3rem);
-  border: 2px solid rgba(255,255,255,0.01) !important;
+  border: 2px solid rgba(255,255,255,0.2) !important;
   cursor: pointer;
   transition: all 0.25s ease !important;
   text-decoration: none !important;
@@ -1422,7 +1426,7 @@ footer::before {
   font-family: 'Inter', sans-serif !important;
   font-size: clamp(0.7rem, 1vw, 0.85rem) !important;
   color: var(--gold) !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 1px 1px 0 var(--brown-dark) !important;
   letter-spacing: 0.08em;
   text-align: center;
   margin-bottom: clamp(0.5rem, 1vw, 1rem);
@@ -1546,7 +1550,7 @@ footer::before {
   border: 2px solid var(--gold) !important;
   padding: 6px 16px !important;
   box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4) !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 1px 1px 0 #000 !important;
   letter-spacing: 0.1em;
 }
 
@@ -1555,7 +1559,7 @@ footer::before {
   font-size: clamp(1.8rem, 4vw, 3.2rem) !important;
   line-height: 1.3 !important;
   color: #fff !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 3px 3px 0 var(--brown-dark) !important;
 }
 
 .hero-title-accent {
@@ -1571,7 +1575,7 @@ footer::before {
   font-size: clamp(0.95rem, 1.5vw, 1.15rem) !important;
   color: var(--parchment) !important;
   line-height: 1.6 !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6) !important;
 }
 
 .hero-btns {
@@ -1583,7 +1587,7 @@ footer::before {
 
 .hero-btn-primary {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
+  color: var(--brown-dark) !important;
   border: 3px solid var(--brown-dark) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: clamp(0.85rem, 1vw, 1rem) !important;
@@ -1657,7 +1661,7 @@ footer::before {
   font-family: 'Inter', sans-serif !important;
   font-size: 1rem !important;
   color: var(--gold-light) !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 2px 2px 0 var(--brown-dark) !important;
 }
 
 .scroll-arrow-label {
@@ -1744,7 +1748,7 @@ section + section::before,
 }
 
 /* Texto de cor da timeline que está herdado via Tailwind */
-.text-\[#5C4033\] { color: #2A2421 !important; }
+.text-\[#5C4033\] { color: var(--brown-dark) !important; }
 .text-\[#8B7355\] { color: var(--parchment-mid) !important; }
 .text-\[#6B5B4F\] { color: var(--brown-mid) !important; }
 
@@ -1836,7 +1840,7 @@ body .medieval-particle {
   font-family: 'Inter', sans-serif !important;
   font-size: clamp(1rem, 1.8vw, 1.25rem) !important;
   color: white !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 2px 2px 0 var(--brown-dark) !important;
   letter-spacing: 0.05em;
   display: flex;
   align-items: center;
@@ -1881,8 +1885,8 @@ body .medieval-particle {
 
 .filtro-btn.filtro-ativo {
   background: linear-gradient(135deg, var(--gold), var(--gold-dim)) !important;
-  color: #2A2421 !important;
-  border-color: #2A2421 !important;
+  color: var(--brown-dark) !important;
+  border-color: var(--brown-dark) !important;
   box-shadow: 0 2px 12px rgba(201,162,39,0.3) !important;
   transform: translateY(-2px);
 }
@@ -1908,7 +1912,7 @@ body .medieval-particle {
 }
 
 .galeria-card {
-  background: linear-gradient(160deg, rgba(245,240,230,0.97) 0%, rgba(237,232,220,0.96) 50%, rgba(228,222,210,0.97) 100%);
+  background: linear-gradient(160deg, rgba(245,230,200,0.97) 0%, rgba(237,217,163,0.96) 50%, rgba(228,205,140,0.97) 100%);
   border: 1px solid var(--gold);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -1983,7 +1987,7 @@ body .medieval-particle {
   font-weight: 700;
   color: var(--brown-dark);
   line-height: 1.4;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
 }
 
 .card-descricao {
