@@ -197,12 +197,12 @@ function processarEventos() {
 // ============================================
 function preencherFiltros() {
     const lugares = [...new Set(todosEventos.map(e => e.lugar).filter(l => l && l !== 'Regiões diversas' && l !== 'Local não especificado'))];
-    const lugarSelect = document.getElementById('lugarFilter');
+    const lugarOptions = document.getElementById('lugarOptions');
+    lugarOptions.innerHTML = ''; // limpar options
     lugares.sort().forEach(lugar => {
         const option = document.createElement('option');
         option.value = lugar;
-        option.textContent = lugar;
-        lugarSelect.appendChild(option);
+        lugarOptions.appendChild(option);
     });
     
     const periodos = [...new Set(todosEventos.map(e => e.periodoNome).filter(p => p))];
@@ -222,17 +222,22 @@ function preencherFiltros() {
 }
 
 function aplicarFiltros() {
-    const lugar = document.getElementById('lugarFilter').value;
+    const lugar = document.getElementById('lugarFilter').value.toLowerCase();
     const ano = document.getElementById('anoFilter').value.toLowerCase();
     const periodo = document.getElementById('periodoFilter').value;
     
-    console.log(`� Aplicando filtros: lugar="${lugar}", ano="${ano}", periodo="${periodo}"`);
+    console.log(`🔍 Aplicando filtros: lugar="${lugar}", ano="${ano}", periodo="${periodo}"`);
     
     eventosFiltrados = todosEventos.filter(evento => {
         let match = true;
         
-        if (lugar && evento.lugar !== lugar) match = false;
+        if (lugar) {
+            const lugarEvento = evento.lugar ? evento.lugar.toLowerCase() : '';
+            if (!lugarEvento.includes(lugar)) match = false;
+        }
+        
         if (periodo && evento.periodoNome !== periodo) match = false;
+        
         if (ano) {
             const anoEvento = evento.ano ? evento.ano.toLowerCase() : '';
             const anoOriginal = evento.anoOriginal ? evento.anoOriginal.toLowerCase() : '';

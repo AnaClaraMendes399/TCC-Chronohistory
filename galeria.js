@@ -2,7 +2,7 @@
 // GALERIA HISTÓRICA — CHRONOHISTORY
 // ============================================
 
-const API_URL = 'https://backendtcccronohistory.vercel.app/periodos';
+const API_URL = 'periodos.json'; // 'https://backendtcccronohistory.vercel.app/periodos';
 
 // ── Estado Global ─────────────────────────
 let todosPeriodos = [];
@@ -118,7 +118,7 @@ function processarEventos() {
                     informacoes_adicionais: evento.informacoes_adicionais || '',
                     periodoNome: periodoNome,
                     periodoId: periodo.id || periodoIndex,
-                    imagem: getImagemPeriodo(periodoNome),
+                    imagem: evento.imagemUrl || (evento.imagem ? 'imagens/' + evento.imagem : getImagemPeriodo(periodoNome)),
                 });
             });
         }
@@ -162,14 +162,10 @@ function renderGaleria() {
         grid.appendChild(card);
     });
 
-    // Animar entrada dos cards
-    setTimeout(() => {
-        document.querySelectorAll('.galeria-card').forEach((card, i) => {
-            setTimeout(() => {
-                card.classList.add('card-visible');
-            }, i * 60);
-        });
-    }, 50);
+    // Marcar cards como visíveis (para efeitos hover)
+    document.querySelectorAll('.galeria-card').forEach(card => {
+        card.classList.add('card-visible');
+    });
 }
 
 // ============================================
