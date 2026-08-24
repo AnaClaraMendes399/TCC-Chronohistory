@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chronohistory — Entrar</title>
+    <title>Chronohistory — Cadastro</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="cadastro.css" />
 </head>
 <body>
 
@@ -19,7 +19,7 @@
         <div class="video-bg-overlay"></div>
     </div>
 
-    <!-- CARD DE LOGIN -->
+    <!-- CARD DE CADASTRO -->
     <div class="login-wrapper">
         <div class="login-card">
 
@@ -31,38 +31,41 @@
                     <span class="brand-name">Chronohistory</span>
                 </div>
 
-                <h1 class="login-title">Bem-vindo de volta</h1>
-                <p class="login-subtitle">Entre para continuar sua jornada pela história.</p>
+                <h1 class="login-title">Criar conta</h1>
+                <p class="login-subtitle">Comece sua jornada pela história agora.</p>
 
                 <div class="ornament" aria-hidden="true"><span></span><i></i><span></span></div>
 
-                <form class="login-form" id="loginForm" novalidate>
+                <form class="login-form" id="registerForm" novalidate>
+
+                    <div class="form-group">
+                        <label for="fullname">Nome completo</label>
+                        <input type="text" id="fullname" name="fullname" placeholder="Digite seu nome completo" autocomplete="name" />
+                    </div>
 
                     <div class="form-group">
                         <label for="username">Usuário</label>
-                        <input type="text" id="username" name="username" placeholder="Digite seu usuário" autocomplete="username" />
+                        <input type="text" id="username" name="username" placeholder="Escolha um usuário" autocomplete="username" />
                     </div>
 
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" id="password" name="password" placeholder="Digite sua senha" autocomplete="current-password" />
+                        <input type="password" id="password" name="password" placeholder="Crie uma senha" autocomplete="new-password" />
                     </div>
 
                     <div class="form-row">
                         <label class="checkbox">
-                            <input type="checkbox" id="remember" name="remember" />
+                            <input type="checkbox" id="terms" name="terms" />
                             <span class="checkbox-box" aria-hidden="true"></span>
-                            <span class="checkbox-label">Lembrar de mim</span>
+                            <span class="checkbox-label">Aceito os <a href="#" class="link-forgot">Termos de Uso</a></span>
                         </label>
-
-                        <a href="#" class="link-forgot">Esqueceu a senha?</a>
                     </div>
 
-                    <button type="submit" class="btn-submit">Entrar</button>
+                    <button type="submit" class="btn-submit">Criar conta</button>
 
                 </form>
 
-                <p class="login-footer">&middot; </p>
+                <p class="login-footer">Já tem uma conta? <a href="login.html" style="color: var(--brown-hover); text-decoration: none;">Faça login</a></p>
             </section>
 
         </div>
@@ -73,20 +76,27 @@
         (function() {
             'use strict';
 
-            const form = document.getElementById('loginForm');
+            const form = document.getElementById('registerForm');
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
+                const fullname = document.getElementById('fullname').value.trim();
                 const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value.trim();
+                const terms = document.getElementById('terms').checked;
 
-                if (!username || !password) {
-                    alert('Preencha usuário e senha para continuar.');
+                if (!fullname || !username || !password) {
+                    alert('Preencha todos os campos para continuar.');
                     return;
                 }
 
-                alert('Bem-vindo(a), ' + username + '!\nAcesso liberado ao Chronohistory.');
+                if (!terms) {
+                    alert('Você deve aceitar os Termos de Uso para criar uma conta.');
+                    return;
+                }
+
+                alert('Conta criada com sucesso, ' + fullname + '!\nBem-vindo(a) ao Chronohistory.');
             });
 
         })();
