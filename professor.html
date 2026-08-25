@@ -174,9 +174,6 @@
 
     <!-- ═══ SCRIPTS ═══ -->
     <script>
-        /* ============================================================
-           MENU MOBILE (igual ao index.html)
-           ============================================================ */
         document.addEventListener('DOMContentLoaded', function () {
             var header = document.querySelector('header');
             window.addEventListener('scroll', function () {
@@ -198,19 +195,6 @@
             });
         });
 
-        /* ============================================================
-           ÁREA DO PROFESSOR — lógica do formulário e da listagem
-           ------------------------------------------------------------
-           IMPORTANTE: por enquanto isso guarda os eventos só em memória
-           (array `eventos`), porque a API ainda não tem endpoints de
-           criar/editar/excluir evento nem de upload de imagem.
-           Quando esses endpoints existirem, troque:
-             - a leitura inicial por um fetch('/eventos')
-             - salvarEvento() por um fetch(..., { method: 'POST' })
-             - excluirEvento() por um fetch(..., { method: 'DELETE' })
-           mantendo o resto (renderização, formulário, preview) igual.
-           ============================================================ */
-
         const PERIODOS_NOMES = {
             '1': 'Pré-História',
             '2': 'Idade Antiga',
@@ -219,9 +203,10 @@
             '5': 'Idade Contemporânea'
         };
 
-        let eventos = [];
+        // Carrega os eventos salvos no navegador (localStorage) ou inicia vazio
+        let eventos = JSON.parse(localStorage.getItem('chronohistory_eventos')) || [];
         let editandoId = null;
-        let imagemAtual = null; // dataURL da imagem selecionada
+        let imagemAtual = null;
 
         const form = document.getElementById('eventoForm');
         const figurasContainer = document.getElementById('figurasContainer');
@@ -242,7 +227,11 @@
             setTimeout(() => toast.classList.remove('show'), 2200);
         }
 
-        /* ── Figuras principais: linhas dinâmicas nome/papel ───────── */
+        // Salva a lista atualizada no localStorage
+        function persistirEventos() {
+            localStorage.setItem('chronohistory_eventos', JSON.stringify(eventos));
+        }
+
         function criarLinhaFigura(nome = '', papel = '') {
             const row = document.createElement('div');
             row.className = 'prof-figura-row';
@@ -256,7 +245,7 @@
         }
 
         addFiguraBtn.addEventListener('click', () => criarLinhaFigura());
-        criarLinhaFigura(); // começa com uma linha em branco
+        criarLinhaFigura();
 
         function lerFiguras() {
             return Array.from(figurasContainer.querySelectorAll('.prof-figura-row'))
@@ -267,7 +256,6 @@
                 .filter(f => f.nome);
         }
 
-        /* ── Upload de imagem com preview e drag-and-drop ──────────── */
         function processarImagem(file) {
             if (!file || !file.type.startsWith('image/')) return;
             const reader = new FileReader();
@@ -295,7 +283,6 @@
             previewWrap.classList.remove('active');
         });
 
-        /* ── Renderização da lista de eventos cadastrados ──────────── */
         function renderEventos(filtro = '') {
             const termo = filtro.trim().toLowerCase();
             const lista = eventos.filter(ev => ev.nome.toLowerCase().includes(termo));
@@ -347,14 +334,13 @@
 
         buscaEventos.addEventListener('input', (e) => renderEventos(e.target.value));
 
-        /* ── Excluir (só em memória, por enquanto) ─────────────────── */
         function excluirEvento(id) {
             eventos = eventos.filter(ev => ev.id !== id);
+            persistirEventos();
             renderEventos(buscaEventos.value);
             mostrarToast('Evento removido.');
         }
 
-        /* ── Editar: carrega os dados de volta no formulário ───────── */
         function editarEvento(id) {
             const ev = eventos.find(ev => ev.id === id);
             if (!ev) return;
@@ -388,9 +374,6 @@
             form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        /* ── Salvar (criar ou atualizar) ────────────────────────────
-           Aqui é o ponto de troca quando o endpoint existir:
-           substituir o bloco "salva em memória" por um fetch(). ───── */
         function salvarEvento(dados) {
             if (editandoId) {
                 eventos = eventos.map(ev => ev.id === editandoId ? { ...dados, id: editandoId } : ev);
@@ -400,6 +383,7 @@
                 eventos.unshift({ ...dados, id: crypto.randomUUID() });
                 mostrarToast('Evento adicionado.');
             }
+            persistirEventos();
             renderEventos(buscaEventos.value);
         }
 
@@ -442,6 +426,7 @@
             limparFormulario();
         });
 
+        // Renderiza os eventos salvos logo ao carregar a página
         renderEventos();
     </script>
 

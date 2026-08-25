@@ -802,3 +802,4 @@ footer {
 @media (min-width: 640px) {
     .timeline-header { flex-direction: row; align-items: baseline; justify-content: space-between; }
 }
+

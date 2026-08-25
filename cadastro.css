@@ -1,397 +1,303 @@
-/* =========================================================
-   CHRONOHISTORY - CADASTRO
-   MESMO ESTILO DO LOGIN - IDENTIDADE VISUAL PRESERVADA
-   ========================================================= */
+/* ==========================================================================
+   Chronohistory — Cadastro Stylesheet (Sólido, Amplo, Quadrado e Legível)
+   ========================================================================== */
 
 :root {
-    --background: #171411;
-    --card: #24201b;
-    --card-light: #2c2721;
-
-    --brown: #a77b43;
-    --brown-hover: #bd9054;
-
-    --text: #eee6d8;
-    --text-soft: #aaa093;
-    --border: #4a4034;
-
-    --font: Arial, Helvetica, sans-serif;
+    --bg-dark: #0f1012;
+    --card-bg: #16181b; /* Fundo 100% opaco e sólido */
+    --border-color: #272a30;
+    --text-primary: #ededed;
+    --text-secondary: #9aa0a6;
+    --accent-color: #c5a880; 
+    --input-bg: #111215;
+    --font-main: 'Inter', sans-serif;
 }
 
-* {
+*, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-html,
-body {
-    width: 100%;
-    height: 100%;
 }
 
 body {
-    font-family: var(--font);
-    background: var(--background);
-    color: var(--text);
-    overflow: hidden;
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
 }
 
-
-/* =========================================================
-   VÍDEO DE FUNDO
-   ========================================================= */
-
+/* ==========================================================================
+   Vídeo de Fundo com Overlay
+   ========================================================================== */
 .video-bg-container {
     position: fixed;
-    inset: 0;
-    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
     overflow: hidden;
 }
 
 .video-bg-container video {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
     object-fit: cover;
-    filter: brightness(0.35);
+    filter: brightness(0.5) contrast(1.1);
 }
 
 .video-bg-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(15, 12, 9, 0.55);
+    background: rgba(11, 12, 14, 0.75); /* Mantém o vídeo visível, mas escuro o suficiente para destacar o card */
 }
 
-
-/* =========================================================
-   ÁREA DO LOGIN (mesmo wrapper)
-   ========================================================= */
-
+/* ==========================================================================
+   Card de Cadastro — Amplo, Quadrado e Totalmente Sólido
+   ========================================================================== */
 .login-wrapper {
-    position: relative;
-    z-index: 1;
-
     width: 100%;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    max-width: 540px;
+    padding: 24px;
+    z-index: 10;
 }
-
-
-/* =========================================================
-   CARD QUADRADO (mesmo tamanho)
-   ========================================================= */
 
 .login-card {
-    width: 500px;
-    height: 560px; /* Aumentei um pouco pra caber os campos */
-
-    background: var(--card);
-
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--card-bg); /* Sólido, sem transparência no card */
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
-
-    overflow: hidden;
+    padding: 56px 52px;
 }
 
-
-/* =========================================================
-   FORMULÁRIO (mesmo padding)
-   ========================================================= */
-
+/* ==========================================================================
+   Painel e Tipografia Aumentada
+   ========================================================================== */
 .panel-form {
-    width: 100%;
-    height: 100%;
-
-    padding: 35px 45px; /* Ajustei levemente pra caber tudo */
-
     display: flex;
     flex-direction: column;
 }
 
-
-/* =========================================================
-   LOGO (idêntico)
-   ========================================================= */
-
 .brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-
-    margin-bottom: 22px;
+    gap: 12px;
+    margin-bottom: 36px;
 }
 
 .brand-mark {
-    width: 30px;
-    height: 30px;
-
+    width: 38px;
+    height: 38px;
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    font-weight: 700;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border: 1px solid var(--brown);
     border-radius: 4px;
-
-    color: var(--brown-hover);
-
-    font-size: 16px;
-    font-weight: bold;
 }
 
 .brand-name {
-    color: var(--text);
-
-    font-size: 16px;
+    font-size: 1.25rem;
     font-weight: 600;
+    letter-spacing: -0.2px;
+    color: var(--text-primary);
 }
 
-
-/* =========================================================
-   TÍTULO (idêntico)
-   ========================================================= */
-
 .login-title {
-    font-size: 28px;
+    font-size: 2.1rem;
     font-weight: 600;
-
-    color: var(--text);
-
-    margin-bottom: 6px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
 }
 
 .login-subtitle {
-    font-size: 13px;
-    line-height: 1.5;
-
-    color: var(--text-soft);
-
-    margin-bottom: 18px;
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
 }
-
-
-/* =========================================================
-   ORNAMENTO (oculto)
-   ========================================================= */
 
 .ornament {
     display: none;
 }
 
-
-/* =========================================================
-   FORMULÁRIO (idêntico)
-   ========================================================= */
-
+/* ==========================================================================
+   Formulário, Inputs e Fontes Maiores
+   ========================================================================== */
 .login-form {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    gap: 24px;
 }
 
 .form-group {
-    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .form-group label {
-    display: block;
-
-    margin-bottom: 5px;
-
-    font-size: 12px;
-    font-weight: 600;
-
-    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
 }
 
 .form-group input {
     width: 100%;
-    height: 40px;
-
-    padding: 0 12px;
-
-    background: #1c1916;
-
-    border: 1px solid var(--border);
-    border-radius: 5px;
-
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px 18px;
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    color: var(--text-primary);
     outline: none;
-
-    color: var(--text);
-
-    font-family: var(--font);
-    font-size: 14px;
-
-    transition: border-color 0.2s;
+    transition: border-color 0.2s ease;
 }
 
 .form-group input::placeholder {
-    color: #756c61;
+    color: #55585e;
 }
 
 .form-group input:focus {
-    border-color: var(--brown);
+    border-color: var(--accent-color);
 }
 
-
-/* =========================================================
-   LEMBRAR / ESQUECI A SENHA (mesmo estilo)
-   ========================================================= */
-
+/* ==========================================================================
+   Linha de Opções (Termos de Uso)
+   ========================================================================== */
 .form-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    margin-top: 2px;
-    margin-bottom: 18px;
-
-    font-size: 12px;
+    font-size: 0.95rem;
+    margin-top: 4px;
 }
 
 .checkbox {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 7px;
-
-    color: var(--text-soft);
-
+    gap: 10px;
     cursor: pointer;
+    user-select: none;
 }
 
-.checkbox input {
-    width: 14px;
-    height: 14px;
-
-    accent-color: var(--brown);
-
+.checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
     cursor: pointer;
 }
 
 .checkbox-box {
-    display: none;
+    width: 18px;
+    height: 18px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox input[type="checkbox"]:checked ~ .checkbox-box {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.checkbox input[type="checkbox"]:checked ~ .checkbox-box::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--bg-dark);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
 }
 
 .link-forgot {
-    color: var(--brown-hover);
+    color: var(--accent-color);
     text-decoration: none;
+    font-size: 0.95rem;
+    transition: opacity 0.2s ease;
 }
 
 .link-forgot:hover {
-    color: var(--brown-hover);
+    opacity: 0.8;
     text-decoration: underline;
 }
 
-
-/* =========================================================
-   BOTÃO (idêntico)
-   ========================================================= */
-
+/* ==========================================================================
+   Botão de Submissão
+   ========================================================================== */
 .btn-submit {
+    margin-top: 12px;
     width: 100%;
-    height: 43px;
-
-    border: none;
-    border-radius: 5px;
-
-    background: var(--brown);
-
-    color: white;
-
-    font-family: var(--font);
-    font-size: 13px;
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    font-family: var(--font-main);
     font-weight: 600;
-
+    font-size: 1.05rem;
+    padding: 16px;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-
-    transition: background 0.2s;
+    transition: background 0.2s ease;
 }
 
 .btn-submit:hover {
-    background: var(--brown-hover);
+    background: #d8d8d8;
 }
 
-.btn-submit:active {
-    transform: translateY(1px);
-}
-
-
-/* =========================================================
-   RODAPÉ (idêntico)
-   ========================================================= */
-
+/* ==========================================================================
+   Rodapé do Card (Link para Login)
+   ========================================================================== */
 .login-footer {
-    margin-top: auto;
-    padding-top: 16px;
-
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-
-    color: #746b60;
-
-    font-size: 12px;
     text-align: center;
+    margin-top: 28px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
 }
 
-
-/* =========================================================
-   RESPONSIVO (idêntico ao login)
-   ========================================================= */
-
-@media (max-width: 600px) {
-
-    .login-card {
-        width: calc(100vw - 30px);
-        height: auto;
-        min-height: 560px;
-    }
-
-    .panel-form {
-        padding: 30px 25px;
-    }
+.login-footer a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
 }
 
-@media (max-height: 650px) {
+.login-footer a:hover {
+    text-decoration: underline;
+}
 
+/* ==========================================================================
+   Responsividade
+   ========================================================================== */
+@media (max-width: 580px) {
+    .login-wrapper {
+        padding: 16px;
+    }
+    
     .login-card {
-        height: calc(100vh - 30px);
-    }
-
-    .panel-form {
-        padding: 20px 35px;
-    }
-
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    .form-group input {
-        height: 36px;
-    }
-
-    .brand {
-        margin-bottom: 15px;
-    }
-
-    .login-title {
-        font-size: 24px;
-    }
-
-    .login-subtitle {
-        font-size: 12px;
-        margin-bottom: 12px;
-    }
-
-    .btn-submit {
-        height: 38px;
-        font-size: 12px;
-    }
-
-    .login-footer {
-        padding-top: 12px;
-        font-size: 11px;
+        padding: 36px 28px;
     }
 }
