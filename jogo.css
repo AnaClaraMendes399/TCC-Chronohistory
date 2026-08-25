@@ -1,0 +1,75 @@
+/* ============================================================
+   CHRONOHISTORY — JOGO INTERATIVO
+   Depende de medieval.css (header, footer, cores, .pagina-jogo,
+   .game-card, .play-overlay, .tecla etc. já estão lá).
+   Este arquivo só cobre o que falta: layout de página com rodapé
+   fixo embaixo, tela cheia e pequenos ajustes de telas estreitas.
+   ============================================================ */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── TELA CHEIA ────────────────────────────────────────── */
+.game-area:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+}
+
+.game-area:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+}
+
+.game-area:-ms-fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+
+.game-area:fullscreen .gm4html5_div_class,
+.game-area:-webkit-full-screen .gm4html5_div_class {
+    height: 100%;
+    padding-bottom: 0;
+}
+
+.game-area:fullscreen .game-overlay-btns {
+    top: 20px;
+    right: 20px;
+}
+
+.game-area:fullscreen .game-overlay-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.4rem;
+}
+
+/* ── RESPONSIVIDADE FINA ──────────────────────────────────── */
+@media (max-width: 480px) {
+    .gm4html5_div_class {
+        padding-bottom: 56.25%;
+    }
+
+    .play-overlay::before {
+        font-size: 0.5rem;
+        top: 8px;
+    }
+}
+
+@media (max-width: 380px) {
+    .grade-controles {
+        gap: 0.4rem;
+    }
+
+    .tecla {
+        min-width: 36px;
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .descricao-tecla {
+        font-size: 0.5rem;
+    }
+}

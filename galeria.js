@@ -194,16 +194,16 @@ function criarCardGaleria(evento, index) {
         <div class="card-corpo">
             <h3 class="card-titulo">${escapeHtml(evento.nome)}</h3>
             <div class="card-meta">
-                <span class="card-meta-item">📅 ${escapeHtml(evento.ano)}</span>
-                <span class="card-meta-item">📍 ${escapeHtml(evento.lugar)}</span>
+                <span class="card-meta-item">${escapeHtml(evento.ano)}</span>
+                <span class="card-meta-item">${escapeHtml(evento.lugar)}</span>
             </div>
             <p class="card-descricao">${escapeHtml(descricaoCorta)}</p>
             <div class="card-acoes">
                 <button class="btn-ver-evento" onclick="abrirDetalhe('${evento.globalId}')">
-                    🔍 Ver Evento
+                    Ver Evento
                 </button>
                 <a href="index.html#timeline-section" class="btn-ver-timeline" onclick="salvarEventoParaTimeline('${evento.globalId}')">
-                    📜 Ver na Linha do Tempo
+                    Ver na Linha do Tempo
                 </a>
             </div>
         </div>
@@ -272,7 +272,7 @@ function abrirDetalhe(globalId) {
     const secCuriosidades = document.getElementById('secaoCuriosidades');
     if (evento.curiosidades && evento.curiosidades.length > 0) {
         modalCuriosidades.innerHTML = evento.curiosidades.slice(0, 3)
-            .map(c => `<li class="modal-curiosidade-item">⬥ ${escapeHtml(c)}</li>`)
+            .map(c => `<li class="modal-curiosidade-item">${escapeHtml(c)}</li>`)
             .join('');
         secCuriosidades.classList.remove('hidden');
     } else {
@@ -361,18 +361,17 @@ function setupEventListeners() {
         });
     }
 
-    // Menu mobile
+    // Menu mobile — usa só a classe "open"; o ícone SVG do botão
+    // (já presente no HTML) fica intacto, sem sobrescrever com texto.
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     if (menuBtn && mobileMenu) {
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('open');
-            menuBtn.textContent = mobileMenu.classList.contains('open') ? '✕' : '☰';
         });
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.remove('open');
-                menuBtn.textContent = '☰';
             });
         });
     }
@@ -399,7 +398,6 @@ function mostrarErroGaleria(mensagem) {
     if (grid) {
         grid.innerHTML = `
             <div class="galeria-erro">
-                <div class="galeria-erro-icone">⚠️</div>
                 <p>${mensagem}</p>
                 <button onclick="location.reload()" class="btn-ver-evento" style="margin-top:1rem">
                     Tentar Novamente
