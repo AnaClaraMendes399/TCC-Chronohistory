@@ -11,6 +11,7 @@
     --paper-dim: #EFE8D8;
     --seal: #8B2E2E;
     --seal-dark: #6E2323;
+    --seal-light: #C24545; /* NOVO: variante mais clara do selo, usada sobre fundos escuros para manter contraste */
     --gold: #B99A5B;
     --gold-soft: rgba(185, 154, 91, 0.35);
     --line: rgba(28, 23, 18, 0.14);
@@ -29,6 +30,8 @@ body {
     color: var(--ink);
     position: relative;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased; /* NOVO: suaviza a renderização da Inter, ajuda em telas de leitura longa */
+    text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3, .display-face {
@@ -242,17 +245,16 @@ nav.hidden.lg\:flex {
 
 .hero-title-accent {
     font-style: italic;
-    color: var(--seal);
-    filter: brightness(1.35);
+    color: var(--seal-light); /* ALTERADO: era var(--seal), muito escuro sobre fundo escuro do hero; seal-light lê melhor */
 }
 
 .hero-desc {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
-    color: rgba(247, 243, 234, 0.78);
-    line-height: 1.7;
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem); /* ALTERADO: leve aumento para melhor leitura */
+    color: rgba(247, 243, 234, 0.85); /* ALTERADO: era 0.78, subiu o contraste sobre o vídeo escuro */
+    line-height: 1.75; /* ALTERADO: era 1.7 */
     max-width: 480px;
-    font-weight: 300;
+    font-weight: 400; /* ALTERADO: era 300 (fino demais para leitura confortável) */
 }
 
 .hero-btns {
@@ -288,6 +290,12 @@ nav.hidden.lg\:flex {
     transform: translateY(-1px);
 }
 
+.hero-btn-primary:active {
+    /* NOVO: estado de clique, antes só existia :hover */
+    background: var(--seal-dark);
+    transform: translateY(0);
+}
+
 .hero-btn-secondary {
     background: transparent;
     color: var(--paper);
@@ -297,6 +305,12 @@ nav.hidden.lg\:flex {
 .hero-btn-secondary:hover {
     border-color: var(--paper);
     transform: translateY(-1px);
+}
+
+.hero-btn-secondary:active {
+    /* NOVO */
+    transform: translateY(0);
+    background: rgba(247, 243, 234, 0.08);
 }
 
 .hero-scroll-arrow {
@@ -556,19 +570,26 @@ main {
 .timeline-card p {
     font-family: 'Inter', sans-serif;
     color: var(--ink-soft);
-    font-size: 0.95rem;
-    line-height: 1.65;
+    font-size: 1rem; /* ALTERADO: era 0.95rem */
+    line-height: 1.75; /* ALTERADO: era 1.65, texto mais arejado */
+    letter-spacing: 0.005em; /* NOVO: leve ajuste, ajuda legibilidade em blocos de texto */
 }
 
 .year-badge {
-    background: transparent;
-    color: var(--seal);
+    /* ALTERADO: cor sólida em vez de transparente + texto colorido —
+       o problema relatado (ano ilegível em "fundo branco") normalmente
+       acontece quando esse badge aparece sobre uma área clara/neutra
+       (ex: dentro de um card de resultado, ou herdando cor branca do
+       Tailwind). Preenchendo o fundo com --seal e deixando o texto em
+       --paper, o contraste fica garantido em QUALQUER fundo por trás. */
+    background: var(--seal);
+    color: var(--paper);
     border: 1px solid var(--seal);
     border-radius: 999px;
     font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.75rem; /* ALTERADO: leve aumento, era 0.72rem */
     font-weight: 700;
-    padding: 4px 12px;
+    padding: 5px 13px;
     white-space: nowrap;
     display: inline-block;
     letter-spacing: 0.02em;
@@ -733,8 +754,8 @@ footer {
 .modal-body p {
     font-family: 'Inter', sans-serif;
     color: var(--ink-soft);
-    font-size: 0.98rem;
-    line-height: 1.65;
+    font-size: 1rem; /* ALTERADO: era 0.98rem */
+    line-height: 1.75; /* ALTERADO: era 1.65 */
 }
 
 #map { height: clamp(200px, 40vw, 400px); border-radius: 2px; }
@@ -803,3 +824,20 @@ footer {
     .timeline-header { flex-direction: row; align-items: baseline; justify-content: space-between; }
 }
 
+/* ── ACESSIBILIDADE — FOCO DE TECLADO ──────────────────────
+   NOVO: nenhum estado de foco visível existia antes. Importante
+   para navegação via teclado e costuma ser avaliado em banca. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--seal);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Removida a blindagem genérica [class*="ano"]/[class*="year"]:
+   ela forçava texto na cor --seal, e como o .year-badge agora
+   tem fundo --seal, o texto ficava invisível (vinho sobre vinho).
+   O .year-badge já resolve o contraste sozinho (fundo --seal,
+   texto --paper); não é necessário forçar nada por cima. */

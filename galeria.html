@@ -83,6 +83,13 @@
             </div>
 
             <!-- ── FILTROS ── -->
+            <div class="galeria-filtros-header">
+                <span class="galeria-filtros-label">Filtrar por período</span>
+                <!-- contador mantido no DOM (o JS escreve nele), só não aparece mais na tela -->
+                <p class="galeria-contador-texto sr-only">
+                    Exibindo <span id="contadorEventos">0 eventos</span>
+                </p>
+            </div>
             <div class="galeria-filtros" role="group" aria-label="Filtrar por período histórico">
                 <button class="filtro-btn filtro-ativo" data-filtro="todos" aria-pressed="true">Todos</button>
                 <button class="filtro-btn" data-filtro="pre-historia" aria-pressed="false">Pré-História</button>
@@ -90,13 +97,6 @@
                 <button class="filtro-btn" data-filtro="idade-media" aria-pressed="false">Idade Média</button>
                 <button class="filtro-btn" data-filtro="idade-moderna" aria-pressed="false">Idade Moderna</button>
                 <button class="filtro-btn" data-filtro="idade-contemporanea" aria-pressed="false">Idade Contemporânea</button>
-            </div>
-
-            <!-- ── CONTADOR ── -->
-            <div class="galeria-contador-bar">
-                <p class="galeria-contador-texto">
-                    Exibindo <span id="contadorEventos">0 eventos</span>
-                </p>
             </div>
 
             <!-- ── GRADE ── -->

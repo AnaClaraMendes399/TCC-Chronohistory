@@ -5,6 +5,12 @@
    --seal, --gold, --line...), o header, o footer e a tipografia.
    Este arquivo cobre só o que é específico do jogo: o vídeo de
    fundo, a moldura do jogo, os controles e o overlay de play.
+
+   SIMPLIFICADO em relação à versão anterior: removi o blur em
+   excesso (backdrop-filter em várias camadas empilhadas), o
+   texto fantasma "CHRONOHISTORY" sobre o overlay de play, e as
+   animações de escala/translação no hover — mantive só troca
+   de cor, que já basta pra dar feedback sem parecer "efeito".
    ============================================================ */
 
 /* ── Vídeo de fundo (mesmo tratamento do hero do index) ──── */
@@ -23,7 +29,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.45;
+    opacity: 0.35; /* ALTERADO: era 0.45, um pouco mais discreto atrás do card */
 }
 
 .video-bg-overlay {
@@ -31,7 +37,7 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(28, 23, 18, 0.75) 0%, rgba(28, 23, 18, 0.6) 45%, rgba(28, 23, 18, 0.95) 100%);
+    background: rgba(28, 23, 18, 0.85); /* ALTERADO: era gradiente de 3 paradas; cor sólida fica mais limpa */
 }
 
 /* ── Página do jogo ──────────────────────────────────────── */
@@ -43,7 +49,7 @@
     justify-content: center;
     padding: clamp(1.5rem, 3vw, 2.5rem) clamp(0.75rem, 2vw, 1.5rem);
     width: 100%;
-    max-width: 1180px;
+    max-width: 1000px; /* ALTERADO: era 1180px, aproxima do tamanho real do canvas (1000x500) */
     margin: 0 auto;
     position: relative;
     z-index: 2;
@@ -68,15 +74,14 @@
     font-family: 'Inter', sans-serif;
     color: rgba(247, 243, 234, 0.72);
     font-size: clamp(0.9rem, 1.5vw, 1.05rem);
-    font-weight: 300;
+    font-weight: 400; /* ALTERADO: era 300, fino demais */
 }
 
 /* ── Card do jogo (mesma "casca" do filter-section) ───────── */
 .game-card {
-    background: rgba(247, 243, 234, 0.03);
+    background: rgba(28, 23, 18, 0.55); /* ALTERADO: era rgba(247,243,234,0.03) + backdrop-filter blur — fundo escuro sólido semi-opaco, sem blur */
     border: 1px solid var(--gold-soft);
     border-radius: 4px;
-    backdrop-filter: blur(8px);
     padding: clamp(1rem, 2vw, 1.75rem);
     width: 100%;
 }
@@ -84,7 +89,7 @@
 .game-area {
     border: 1px solid var(--line);
     border-radius: 3px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.18);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); /* ALTERADO: sombra dupla antes, uma só agora, mais discreta */
     position: relative;
     width: 100%;
     background: #0c0a08;
@@ -113,29 +118,17 @@
 .play-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(10, 8, 5, 0.88);
-    backdrop-filter: blur(6px);
+    background: rgba(10, 8, 5, 0.9); /* ALTERADO: era 0.88 + backdrop-filter blur(6px) — blur removido, opacidade compensa */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(0.75rem, 1.5vw, 1.25rem);
     z-index: 20;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease; /* ALTERADO: era 0.3s */
 }
 
-.play-overlay::before {
-    content: 'CHRONOHISTORY';
-    position: absolute;
-    top: clamp(12px, 2vw, 20px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(0.65rem, 1.2vw, 0.8rem);
-    color: rgba(247, 243, 234, 0.55);
-    white-space: nowrap;
-    letter-spacing: 0.18em;
-}
+/* REMOVIDO: .play-overlay::before com o texto fantasma "CHRONOHISTORY"
+   flutuando no topo — decoração que não ajudava e pesava o visual. */
 
 .play-overlay button {
     font-family: 'Inter', sans-serif;
@@ -146,7 +139,7 @@
     border: 1px solid var(--seal);
     padding: clamp(12px, 2vw, 15px) clamp(24px, 4vw, 34px);
     border-radius: 2px;
-    transition: all 0.2s ease;
+    transition: background 0.15s ease; /* ALTERADO: era "all 0.2s ease" (incluía transform) */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -157,7 +150,7 @@
 .play-overlay button:hover {
     background: var(--seal-dark);
     border-color: var(--seal-dark);
-    transform: translateY(-1px);
+    /* REMOVIDO: transform: translateY(-1px) no hover */
 }
 
 .play-overlay .play-icon {
@@ -190,10 +183,9 @@
     border: 1px solid var(--gold-soft);
     border-radius: 2px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; /* ALTERADO: era "all 0.2s ease" */
     text-decoration: none;
     background: rgba(28, 23, 18, 0.75);
-    backdrop-filter: blur(6px);
     color: var(--paper);
     line-height: 1;
 }
@@ -204,12 +196,7 @@
     background: rgba(28, 23, 18, 0.92);
 }
 
-.game-overlay-btn:active { transform: scale(0.94); }
-
-#exitBtn:hover {
-    border-color: var(--seal);
-    color: var(--seal);
-}
+/* REMOVIDO: .game-overlay-btn:active com transform: scale(0.94) */
 
 /* ── Tela cheia ───────────────────────────────────────────── */
 .game-area:fullscreen,
@@ -283,7 +270,6 @@
     min-width: clamp(44px, 8vw, 58px);
     text-align: center;
     letter-spacing: 0.02em;
-    transition: all 0.15s ease;
 }
 
 .tecla:active,
@@ -317,7 +303,6 @@
 /* ── Responsividade fina ─────────────────────────────────── */
 @media (max-width: 480px) {
     .gm4html5_div_class { padding-bottom: 56.25%; }
-    .play-overlay::before { font-size: 0.55rem; top: 8px; }
 }
 
 @media (max-width: 380px) {
