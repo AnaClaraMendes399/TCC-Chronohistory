@@ -328,10 +328,14 @@ function checkUrlParams() {
 // ============================================
 function setupEventListeners() {
     // Filtros de período
-    document.querySelectorAll('.filtro-btn').forEach(btn => {
+        document.querySelectorAll('.filtro-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('filtro-ativo'));
+            document.querySelectorAll('.filtro-btn').forEach(b => {
+                b.classList.remove('filtro-ativo');
+                b.setAttribute('aria-pressed', 'false');
+            });
             btn.classList.add('filtro-ativo');
+            btn.setAttribute('aria-pressed', 'true');
             filtroAtual = btn.getAttribute('data-filtro');
             renderGaleria();
         });

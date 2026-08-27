@@ -30,14 +30,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function carregarDados() {
     try {
         const response = await fetch(API_URL);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        console.log('Dados recebidos da API:', data);
-        
+
         if (Array.isArray(data)) {
             todosPeriodos = data;
         } else if (data && typeof data === 'object') {
@@ -49,19 +48,16 @@ async function carregarDados() {
                 todosPeriodos = [data];
             }
         }
-        
-        console.log(`Encontrados ${todosPeriodos.length} períodos históricos`);
-        console.log('Nomes dos períodos:', todosPeriodos.map(p => p.nome));
-        
+
         if (todosPeriodos.length === 0) {
             mostrarErro('Nenhum dado histórico encontrado na API.');
             return;
         }
-        
+
         processarEventos();
         preencherFiltros();
         aplicarFiltros();
-        
+
     } catch (error) {
         console.error('Erro ao carregar dados:', error);
         mostrarErro(`Não foi possível carregar os dados históricos: ${error.message}`);
@@ -75,40 +71,36 @@ function converterAnoParaNumero(anoStr) {
     if (!anoStr || anoStr === 'Data desconhecida' || anoStr === 'Data não especificada') {
         return 9999;
     }
-    
+
     let anoLimpo = anoStr.toString().trim();
-    
-    const isBC = anoLimpo.includes('a.C.') || 
-                 anoLimpo.includes('AC') || 
+
+    const isBC = anoLimpo.includes('a.C.') ||
+                 anoLimpo.includes('AC') ||
                  anoLimpo.includes('aC') ||
                  anoLimpo.includes('antes de Cristo');
-    
+
     let numeros = anoLimpo.match(/\d+/g);
-    
+
     if (!numeros) {
         return 9999;
     }
-    
+
     let ano = parseInt(numeros[0]);
-    
-    if (numeros.length > 1) {
-        ano = parseInt(numeros[0]);
-    }
-    
+
     if (isBC) {
         ano = -ano;
     }
-    
+
     return ano;
 }
 
 function formatarAno(anoStr) {
     if (!anoStr) return 'Data desconhecida';
-    
+
     if (anoStr.includes('a.C.') || anoStr.includes('d.C.') || anoStr.includes('século')) {
         return anoStr;
     }
-    
+
     const numeros = anoStr.match(/\d+/g);
     if (numeros) {
         const ano = parseInt(numeros[0]);
@@ -118,8 +110,19 @@ function formatarAno(anoStr) {
             return `${ano} d.C.`;
         }
     }
-    
+
     return anoStr;
+}
+
+// Usada só para a "tag" extra que mostra o ano em número puro
+// (ex: "9600 a.C.") ao lado das outras etiquetas do card.
+// ANTES tinha um "º" (ordinal) grudado no número, o que não faz
+// sentido nenhum para uma data — foi removido.
+function formatarAnoNumericoTag(anoNumerico) {
+    if (anoNumerico === 9999) return null;
+    return anoNumerico < 0
+        ? `${Math.abs(anoNumerico)} a.C.`
+        : `${anoNumerico} d.C.`;
 }
 
 // ============================================
@@ -127,16 +130,11 @@ function formatarAno(anoStr) {
 // ============================================
 function processarEventos() {
     todosEventos = [];
-    
-    console.log('Processando todos os períodos para extrair eventos...');
-    
+
     todosPeriodos.forEach((periodo, periodoIndex) => {
         const periodoNome = periodo.nome || `Período ${periodoIndex + 1}`;
-        console.log(`Processando período: "${periodoNome}"`);
-        
+
         if (periodo.acontecimentos && Array.isArray(periodo.acontecimentos)) {
-            console.log(`Encontrados ${periodo.acontecimentos.length} acontecimentos em "${periodoNome}"`);
-            
             periodo.acontecimentos.forEach((evento, eventoIndex) => {
                 const anoOriginal = evento.ano || 'Data desconhecida';
                 const nomeEvento = evento.nome || `Evento ${eventoIndex + 1}`;
@@ -144,12 +142,12 @@ function processarEventos() {
                 const descricaoEvento = evento.oque_aconteceu || 'Descrição disponível no "Saber Mais"';
                 const mudouEvento = evento.oque_mudou || 'Este evento trouxe transformações significativas.';
                 const figurasPrincipais = evento.figuras_principais || [];
-                
+
                 const anoNumerico = converterAnoParaNumero(anoOriginal);
                 const anoFormatado = formatarAno(anoOriginal);
-                
+
                 const globalId = `periodo_${periodo.id || periodoIndex}_evento_${evento.id || eventoIndex}`;
-                
+
                 todosEventos.push({
                     id: evento.id || `${periodoIndex}_${eventoIndex}`,
                     nome: nomeEvento,
@@ -171,25 +169,17 @@ function processarEventos() {
                     periodoOriginal: periodo
                 });
             });
-        } else {
-            console.log(`Nenhum acontecimento encontrado em "${periodoNome}"`);
         }
     });
-    
-    todosEventos.sort((a, b) => {
-        if (a.anoNumerico === 9999 && b.anoNumerico === 9999) return 0;
-        if (a.anoNumerico === 9999) return 1;
-        if (b.anoNumerico === 9999) return -1;
-        return a.anoNumerico - b.anoNumerico;
-    });
-    
-    console.log(`Total de eventos processados: ${todosEventos.length}`);
-    console.log('Distribuição por período:');
-    const distribuicao = {};
-    todosEventos.forEach(e => {
-        distribuicao[e.periodoNome] = (distribuicao[e.periodoNome] || 0) + 1;
-    });
-    console.log(distribuicao);
+
+    todosEventos.sort(ordenarPorAno);
+}
+
+function ordenarPorAno(a, b) {
+    if (a.anoNumerico === 9999 && b.anoNumerico === 9999) return 0;
+    if (a.anoNumerico === 9999) return 1;
+    if (b.anoNumerico === 9999) return -1;
+    return a.anoNumerico - b.anoNumerico;
 }
 
 // ============================================
@@ -198,21 +188,22 @@ function processarEventos() {
 function preencherFiltros() {
     const lugares = [...new Set(todosEventos.map(e => e.lugar).filter(l => l && l !== 'Regiões diversas' && l !== 'Local não especificado'))];
     const lugarOptions = document.getElementById('lugarOptions');
-    lugarOptions.innerHTML = ''; // limpar options
+    lugarOptions.innerHTML = '';
     lugares.sort().forEach(lugar => {
         const option = document.createElement('option');
         option.value = lugar;
         lugarOptions.appendChild(option);
     });
-    
+
     const periodos = [...new Set(todosEventos.map(e => e.periodoNome).filter(p => p))];
     const periodoSelect = document.getElementById('periodoFilter');
-    
+    periodoSelect.innerHTML = '';
+
     const defaultOption = document.createElement('option');
     defaultOption.value = '';
     defaultOption.textContent = 'Todos os períodos';
     periodoSelect.appendChild(defaultOption);
-    
+
     periodos.forEach(periodo => {
         const option = document.createElement('option');
         option.value = periodo;
@@ -225,43 +216,28 @@ function aplicarFiltros() {
     const lugar = document.getElementById('lugarFilter').value.toLowerCase();
     const ano = document.getElementById('anoFilter').value.toLowerCase();
     const periodo = document.getElementById('periodoFilter').value;
-    
-    console.log(`Aplicando filtros: lugar="${lugar}", ano="${ano}", periodo="${periodo}"`);
-    
+
     eventosFiltrados = todosEventos.filter(evento => {
         let match = true;
-        
+
         if (lugar) {
             const lugarEvento = evento.lugar ? evento.lugar.toLowerCase() : '';
             if (!lugarEvento.includes(lugar)) match = false;
         }
-        
+
         if (periodo && evento.periodoNome !== periodo) match = false;
-        
+
         if (ano) {
             const anoEvento = evento.ano ? evento.ano.toLowerCase() : '';
             const anoOriginal = evento.anoOriginal ? evento.anoOriginal.toLowerCase() : '';
             if (!anoEvento.includes(ano) && !anoOriginal.includes(ano)) match = false;
         }
-        
+
         return match;
     });
-    
-    eventosFiltrados.sort((a, b) => {
-        if (a.anoNumerico === 9999 && b.anoNumerico === 9999) return 0;
-        if (a.anoNumerico === 9999) return 1;
-        if (b.anoNumerico === 9999) return -1;
-        return a.anoNumerico - b.anoNumerico;
-    });
-    
-    console.log(`Filtrados ${eventosFiltrados.length} eventos de ${todosEventos.length} total`);
-    console.log('Distribuição após filtro:');
-    const distribuicao = {};
-    eventosFiltrados.forEach(e => {
-        distribuicao[e.periodoNome] = (distribuicao[e.periodoNome] || 0) + 1;
-    });
-    console.log(distribuicao);
-    
+
+    eventosFiltrados.sort(ordenarPorAno);
+
     currentPage = 1;
     totalEventosCarregados = 0;
     todosEventosCarregados = false;
@@ -269,177 +245,139 @@ function aplicarFiltros() {
 }
 
 // ============================================
-// Renderizar Timeline - CORRIGIDO (sem repetição)
+// Renderizar Timeline
 // ============================================
 function renderTimeline() {
     const container = document.getElementById('timelineItems');
     const loadingIndicator = document.getElementById('loadingIndicator');
-    
-    // Calcular quantos eventos já foram carregados
+
     const start = totalEventosCarregados;
     const end = Math.min(start + itemsPerLoad, eventosFiltrados.length);
     const eventosToShow = eventosFiltrados.slice(start, end);
-    
-    console.log(`Renderizando: start=${start}, end=${end}, total=${eventosFiltrados.length}`);
-    
+
     if (currentPage === 1) {
         container.innerHTML = '';
         totalEventosCarregados = 0;
     }
-    
+
     if (eventosFiltrados.length === 0) {
+        // ANTES: "bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl" — glassmorphism
+        // solto no meio do JS. Usa a mesma "casca" sólida já definida em
+        // #timelineItems .text-center no CSS (sem blur, sem transparência de vidro).
         container.innerHTML = `
-            <div class="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl">
-                <p class="text-[#8B7355] text-xl">Nenhum evento encontrado com os filtros selecionados.</p>
-                <p class="text-[#8B7355] mt-3 text-lg">Tente ajustar seus filtros para descobrir mais histórias!</p>
+            <div class="text-center py-16">
+                <p>Nenhum evento encontrado com os filtros selecionados.</p>
+                <p style="margin-top: 0.75rem; opacity: 0.75;">Tente ajustar seus filtros para descobrir mais histórias.</p>
             </div>
         `;
         loadingIndicator.classList.add('hidden');
         return;
     }
-    
-    // Adicionar APENAS os novos eventos (start até end)
+
     eventosToShow.forEach((evento, index) => {
         adicionarEventoTimeline(evento, container, totalEventosCarregados + index);
     });
-    
-    // Atualizar contador de eventos carregados
+
     totalEventosCarregados += eventosToShow.length;
-    
-    // Verificar se já mostrou todos os eventos
+
     const allEventsShown = totalEventosCarregados >= eventosFiltrados.length;
-    
+
     if (allEventsShown) {
         loadingIndicator.classList.add('hidden');
         todosEventosCarregados = true;
-        
-        // Removido o "Fim da Jornada Histórica" - apenas esconde o loading
-        // Não adiciona mais nenhuma mensagem de fim
-        
     } else {
         loadingIndicator.classList.remove('hidden');
         loadingIndicator.innerHTML = `
             <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-[#EDD9A3] text-lg">Carregando mais eventos históricos...</p>
-            <p class="text-[#EDD9A3] text-sm mt-2">${totalEventosCarregados} de ${eventosFiltrados.length} eventos carregados</p>
-            <p class="text-[#EDD9A3] text-xs mt-1">${Math.round((totalEventosCarregados / eventosFiltrados.length) * 100)}% completo</p>
+            <p>Carregando mais eventos históricos...</p>
+            <p style="opacity: 0.65; font-size: 0.85rem; margin-top: 0.35rem;">
+                ${totalEventosCarregados} de ${eventosFiltrados.length} eventos · ${Math.round((totalEventosCarregados / eventosFiltrados.length) * 100)}%
+            </p>
         `;
         todosEventosCarregados = false;
-        
-        // Remove observers antigos
+
         const oldObserver = loadingIndicator._observer;
         if (oldObserver) {
             oldObserver.disconnect();
         }
-        
-        // Configurar novo observer para scroll infinito
+
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && !isLoading && !todosEventosCarregados) {
                 carregarMaisEventos();
             }
         }, { threshold: 0.1 });
-        
+
         loadingIndicator._observer = observer;
         observer.observe(loadingIndicator);
     }
-    
+
     observeTimelineItems();
 }
 
+// ANTES: cada card misturava a classe custom (.timeline-card, .year-badge,
+// .tag-text, .action-btn-saber) com uma pilha de utilitários Tailwind
+// (rounded-full, rounded-xl, shadow-md, bg-gradient-to-r...) por cima —
+// o que sobrescrevia o visual "papel/tinta" plano que o CSS já define e
+// devolvia o efeito "cartão de app genérico". Agora o HTML usa só as
+// classes do próprio design system, sem gradiente e sem pill-shape.
 function adicionarEventoTimeline(evento, container, index) {
     const itemDiv = document.createElement('div');
-    itemDiv.className = 'timeline-item relative';
+    itemDiv.className = 'timeline-item';
     itemDiv.setAttribute('data-event-id', evento.id);
     itemDiv.setAttribute('data-ano', evento.anoNumerico);
     itemDiv.setAttribute('data-periodo', evento.periodoNome);
-    
-    const isLeft = index % 2 === 0;
-    
+
     const nome = evento.nome || 'Evento Histórico';
     const ano = evento.ano || 'Data desconhecida';
     const lugar = evento.lugar || 'Regiões diversas';
     const descricao = evento.oque_aconteceu || 'Descrição disponível no "Saber Mais"';
     const periodoNome = evento.periodoNome || 'Período histórico';
-    
-    const anoDisplay = evento.anoNumerico !== 9999 ? 
-        `${evento.anoNumerico < 0 ? `${Math.abs(evento.anoNumerico)}º a.C.` : `${evento.anoNumerico}º d.C.`}` : 
-        'Data desconhecida';
-    
+
+    const anoNumericoTag = formatarAnoNumericoTag(evento.anoNumerico);
+
     let figurasHtml = '';
     if (evento.figuras_principais && evento.figuras_principais.length > 0) {
         const nomesFiguras = evento.figuras_principais.map(f => f.nome || f).join(', ');
-        figurasHtml = `
-            <span class="text-base bg-gradient-to-r from-[#D4C5A9] to-[#E8DCC8] px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm tag-text font-medium">
-                ${escapeHtml(nomesFiguras)}
-            </span>
-        `;
+        figurasHtml = `<span class="tag-text">${escapeHtml(nomesFiguras)}</span>`;
     }
-    
+
     let infoAdicionalHtml = '';
     if (evento.informacoes_adicionais) {
-        infoAdicionalHtml = `
-            <span class="text-base bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm tag-text font-medium">
-                ${escapeHtml(evento.informacoes_adicionais)}
-            </span>
-        `;
+        infoAdicionalHtml = `<span class="tag-text">${escapeHtml(evento.informacoes_adicionais)}</span>`;
     }
-    
+
     itemDiv.innerHTML = `
-        <div class="flex flex-col md:flex-row items-start ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}">
-            <div class="timeline-dot absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-7 h-7 bg-[#8B6914] rounded-full z-10"
-                 style="box-shadow: 0 0 0 5px rgba(139, 105, 20, 0.25);">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+            <div class="flex justify-between items-start gap-3 mb-4 flex-wrap">
+                <h3>${escapeHtml(nome)}</h3>
+                <span class="year-badge">${escapeHtml(ano)}</span>
             </div>
-            
-            <div class="flex-1 md:w-1/2 ${isLeft ? 'md:pr-16 md:pl-8' : 'md:pl-16 md:pr-8'} pl-16 md:pl-0">
-                <div class="timeline-card p-7 cursor-pointer">
-                    <div class="flex justify-between items-start mb-5 flex-wrap gap-3">
-                        <h3 class="text-4xl font-bold text-[#5C4033]">
-                            ${escapeHtml(nome)}
-                        </h3>
-                        <span class="year-badge text-white px-6 py-3 rounded-full text-xl font-bold shadow-md">
-                            ${escapeHtml(ano)}
-                        </span>
-                    </div>
-                    
-                    <p class="text-[#5C4033] mb-5 leading-relaxed line-clamp-3 text-2xl font-medium">
-                        ${escapeHtml(descricao)}
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-3 mb-5">
-                        <span class="text-base bg-[#F5F0E6] px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm tag-text font-medium">
-                            ${escapeHtml(lugar)}
-                        </span>
-                        <span class="text-base bg-[#F5F0E6] px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm tag-text font-medium">
-                            ${escapeHtml(periodoNome)}
-                        </span>
-                        ${evento.anoNumerico !== 9999 ? `
-                            <span class="text-base bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm tag-text font-medium">
-                                ${anoDisplay}
-                            </span>
-                        ` : ''}
-                        ${figurasHtml}
-                        ${infoAdicionalHtml}
-                    </div>
-                    
-                    <div class="flex gap-4 mt-5 flex-wrap">
-                        <button onclick="abrirSaberMais('${evento.globalId}')" 
-                                class="btn-primary px-7 py-3.5 text-white rounded-xl font-semibold flex items-center gap-2 shadow-md action-btn text-lg action-btn-saber">
-                            Saber Mais
-                        </button>
-                        <button onclick="mostrarMapa('${escapeHtml(lugar)}', '${escapeHtml(nome)}')" 
-                                class="btn-secondary px-7 py-3.5 border-2 border-[#8B6914] text-[#8B6914] rounded-xl font-semibold hover:bg-[#8B6914] hover:text-white transition-all duration-300 flex items-center gap-2 action-btn text-lg action-btn-mapa">
-                            Ver Mapa
-                        </button>
-                        <a href="galeria.html?evento=${encodeURIComponent(evento.globalId)}"
-                           class="btn-secondary px-7 py-3.5 border-2 border-[#8B6914] text-[#8B6914] rounded-xl font-semibold hover:bg-[#8B6914] hover:text-white transition-all duration-300 flex items-center gap-2 action-btn text-lg action-btn-galeria">
-                            Ver Imagens
-                        </a>
-                    </div>
-                </div>
+
+            <p class="mb-4">${escapeHtml(descricao)}</p>
+
+            <div class="flex flex-wrap gap-2 mb-5">
+                <span class="tag-text">${escapeHtml(lugar)}</span>
+                <span class="tag-text">${escapeHtml(periodoNome)}</span>
+                ${anoNumericoTag ? `<span class="tag-text">${anoNumericoTag}</span>` : ''}
+                ${figurasHtml}
+                ${infoAdicionalHtml}
+            </div>
+
+            <div class="flex gap-3 flex-wrap">
+                <button onclick="abrirSaberMais('${evento.globalId}')" class="action-btn-saber">
+                    Saber Mais
+                </button>
+                <button onclick="mostrarMapa('${escapeHtml(lugar)}', '${escapeHtml(nome)}')" class="action-btn-mapa">
+                    Ver Mapa
+                </button>
+                <a href="galeria.html?evento=${encodeURIComponent(evento.globalId)}" class="action-btn-mapa">
+                    Ver Imagens
+                </a>
             </div>
         </div>
     `;
-    
+
     container.appendChild(itemDiv);
 }
 
@@ -459,38 +397,35 @@ async function abrirSaberMais(globalId) {
         console.error('Evento não encontrado com globalId:', globalId);
         return;
     }
-    
+
     const modal = document.getElementById('saberMaisModal');
     const modalContent = document.getElementById('modalContent');
-    
+
     modalContent.innerHTML = `
         <div class="text-center py-8">
             <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-[#8B7355] text-xl">Buscando informações sobre ${evento.nome}...</p>
+            <p>Buscando informações sobre ${escapeHtml(evento.nome)}...</p>
         </div>
     `;
-    
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    
+
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ periodo: evento.periodoNome })
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        console.log('Resposta da API para:', evento.periodoNome, data);
-        
+
         let informacoes = null;
-        
+
         if (data.informações) {
             informacoes = data.informações.periodo_unico || data.informações;
         } else if (data.periodo_unico) {
@@ -500,153 +435,116 @@ async function abrirSaberMais(globalId) {
         } else if (data.periodo) {
             informacoes = data.periodo;
         }
-        
+
         if (!informacoes && typeof data === 'object') {
             informacoes = data;
         }
-        
+
         if (informacoes && Object.keys(informacoes).length > 0) {
-            const caracteristicas = informacoes.caracteristicas_principais || 
-                                   informacoes.caracteristicas || 
+            const caracteristicas = informacoes.caracteristicas_principais ||
+                                   informacoes.caracteristicas ||
                                    informacoes.características || [];
-            
-            const curiosidades = informacoes.curiosidades || 
-                                informacoes.curiosidade || 
+
+            const curiosidades = informacoes.curiosidades ||
+                                informacoes.curiosidade ||
                                 informacoes.curiosidades_historicas || [];
-            
-            const legado = informacoes.legado || 
-                          informacoes.legado_historico || 
+
+            const legado = informacoes.legado ||
+                          informacoes.legado_historico ||
                           informacoes.legado_histórico || '';
-            
-            modalContent.innerHTML = `
-                <div class="space-y-5">
-                    <div class="border-b-2 border-[#D4C5A9] pb-4">
-                        <h4 class="text-2xl font-bold text-[#5C4033]">
-                            ${escapeHtml(evento.nome)}
-                        </h4>
-                        <p class="text-base text-[#8B7355] mt-1">${escapeHtml(evento.ano)} • ${escapeHtml(evento.lugar)}</p>
-                        <p class="text-sm text-[#8B7355] mt-1">${escapeHtml(evento.periodoNome)}</p>
-                    </div>
-                    
-                    ${evento.oque_aconteceu ? `
-                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                O que aconteceu:
-                            </h5>
-                            <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(evento.oque_aconteceu)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${evento.oque_mudou ? `
-                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                O que mudou:
-                            </h5>
-                            <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(evento.oque_mudou)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${legado ? `
-                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                Legado:
-                            </h5>
-                            <p class="text-[#6B5B4F] leading-relaxed text-base">${escapeHtml(legado)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${caracteristicas.length > 0 ? `
-                        <div>
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                Características principais:
-                            </h5>
-                            <ul class="list-disc list-inside text-[#6B5B4F] space-y-2 text-base">
-                                ${caracteristicas.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
-                            </ul>
-                        </div>
-                    ` : ''}
-                    
-                    ${evento.figuras_principais && evento.figuras_principais.length > 0 ? `
-                        <div>
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                Figuras principais:
-                            </h5>
-                            <ul class="list-disc list-inside text-[#6B5B4F] space-y-2 text-base">
-                                ${evento.figuras_principais.map(f => `<li>${escapeHtml(f.nome || f)}${f.papel ? ` - ${escapeHtml(f.papel)}` : ''}</li>`).join('')}
-                            </ul>
-                        </div>
-                    ` : ''}
-                    
-                    ${evento.informacoes_adicionais ? `
-                        <div class="bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-6 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                Informações adicionais:
-                            </h5>
-                            <p class="text-base text-[#6B5B4F] leading-relaxed">${escapeHtml(evento.informacoes_adicionais)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${curiosidades.length > 0 ? `
-                        <div class="bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-6 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">
-                                Curiosidades históricas:
-                            </h5>
-                            <ul class="space-y-3">
-                                ${curiosidades.slice(0, 3).map(c => `<li class="text-base text-[#6B5B4F] flex items-start gap-2"><span class="text-[#8B6914]">•</span> ${escapeHtml(c)}</li>`).join('')}
-                            </ul>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
+
+            modalContent.innerHTML = renderConteudoModal(evento, {
+                caracteristicas, curiosidades, legado
+            });
         } else {
-            modalContent.innerHTML = `
-                <div class="space-y-4">
-                    <div class="border-b border-[#D4C5A9] pb-3">
-                        <h4 class="text-xl font-bold text-[#5C4033]">${escapeHtml(evento.nome)}</h4>
-                        <p class="text-base text-[#8B7355]">${escapeHtml(evento.ano)} • ${escapeHtml(evento.lugar)}</p>
-                        <p class="text-sm text-[#8B7355]">${escapeHtml(evento.periodoNome)}</p>
-                    </div>
-                    
-                    ${evento.oque_aconteceu ? `
-                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">Descrição:</h5>
-                            <p class="text-[#6B5B4F] text-base">${escapeHtml(evento.oque_aconteceu)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${evento.oque_mudou ? `
-                        <div class="bg-[#F5F0E6] p-5 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">O que mudou:</h5>
-                            <p class="text-[#6B5B4F] text-base">${escapeHtml(evento.oque_mudou)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${evento.informacoes_adicionais ? `
-                        <div class="bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-5 rounded-xl">
-                            <h5 class="font-semibold text-[#5C4033] mb-3 text-lg">Informações adicionais:</h5>
-                            <p class="text-[#6B5B4F] text-base">${escapeHtml(evento.informacoes_adicionais)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    <div class="bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-5 rounded-xl text-center">
-                        <p class="text-base text-[#8B7355] mt-3">Informações complementares disponíveis em fontes históricas.</p>
-                    </div>
-                </div>
-            `;
+            modalContent.innerHTML = renderConteudoModal(evento, {
+                caracteristicas: [], curiosidades: [], legado: ''
+            });
         }
     } catch (error) {
         console.error('Erro ao buscar informações:', error);
         modalContent.innerHTML = `
             <div class="text-center py-8">
-                <p class="text-[#8B7355] text-xl">Erro ao carregar informações detalhadas.</p>
-                <p class="text-sm text-[#8B7355] mt-2">Tente novamente mais tarde.</p>
-                <div class="mt-4 p-5 bg-[#F5F0E6] rounded-xl text-left">
-                    <p class="text-base text-[#6B5B4F]"><strong>${escapeHtml(evento.nome)}</strong></p>
-                    ${evento.oque_aconteceu ? `<p class="text-base text-[#6B5B4F] mt-2">${escapeHtml(evento.oque_aconteceu)}</p>` : ''}
+                <p>Erro ao carregar informações detalhadas.</p>
+                <p style="opacity: 0.7; font-size: 0.9rem; margin-top: 0.5rem;">Tente novamente mais tarde.</p>
+                <div class="modal-secao" style="text-align: left; margin-top: 1.25rem;">
+                    <p><strong>${escapeHtml(evento.nome)}</strong></p>
+                    ${evento.oque_aconteceu ? `<p style="margin-top: 0.5rem;">${escapeHtml(evento.oque_aconteceu)}</p>` : ''}
                 </div>
             </div>
         `;
     }
+}
+
+// ANTES: cada bloco do modal usava "bg-[#F5F0E6] p-5 rounded-xl" ou
+// "bg-gradient-to-r from-[#E8DCC8] to-[#F5F0E6] p-6 rounded-xl" — mais
+// gradiente e bordas muito arredondadas. Trocado por ".modal-secao",
+// um bloco sólido e reto, coerente com o resto do site.
+function renderConteudoModal(evento, { caracteristicas, curiosidades, legado }) {
+    return `
+        <div>
+            <div class="modal-header-info" style="border-bottom: 1px solid var(--line); padding-bottom: 1rem; margin-bottom: 1.25rem;">
+                <h4>${escapeHtml(evento.nome)}</h4>
+                <p style="opacity: 0.7; margin-top: 0.35rem;">${escapeHtml(evento.ano)} · ${escapeHtml(evento.lugar)}</p>
+                <p style="opacity: 0.55; font-size: 0.85rem; margin-top: 0.15rem;">${escapeHtml(evento.periodoNome)}</p>
+            </div>
+
+            ${evento.oque_aconteceu ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">O que aconteceu</h5>
+                    <p>${escapeHtml(evento.oque_aconteceu)}</p>
+                </div>
+            ` : ''}
+
+            ${evento.oque_mudou ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">O que mudou</h5>
+                    <p>${escapeHtml(evento.oque_mudou)}</p>
+                </div>
+            ` : ''}
+
+            ${legado ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">Legado</h5>
+                    <p>${escapeHtml(legado)}</p>
+                </div>
+            ` : ''}
+
+            ${caracteristicas.length > 0 ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">Características principais</h5>
+                    <ul style="padding-left: 1.1rem;">
+                        ${caracteristicas.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : ''}
+
+            ${evento.figuras_principais && evento.figuras_principais.length > 0 ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">Figuras principais</h5>
+                    <ul style="padding-left: 1.1rem;">
+                        ${evento.figuras_principais.map(f => `<li>${escapeHtml(f.nome || f)}${f.papel ? ` — ${escapeHtml(f.papel)}` : ''}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : ''}
+
+            ${evento.informacoes_adicionais ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">Informações adicionais</h5>
+                    <p>${escapeHtml(evento.informacoes_adicionais)}</p>
+                </div>
+            ` : ''}
+
+            ${curiosidades.length > 0 ? `
+                <div class="modal-secao">
+                    <h5 class="modal-secao-titulo">Curiosidades históricas</h5>
+                    <ul class="modal-curiosidades-lista">
+                        ${curiosidades.slice(0, 3).map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : ''}
+        </div>
+    `;
 }
 
 // ============================================
@@ -654,9 +552,9 @@ async function abrirSaberMais(globalId) {
 // ============================================
 function obterCoordenadas(lugar) {
     if (!lugar) return { lat: 0, lng: 0 };
-    
+
     const lugarLower = lugar.toLowerCase().trim();
-    
+
     const coordenadas = {
         'brasil': { lat: -14.2350, lng: -51.9253 },
         'rio de janeiro': { lat: -22.9068, lng: -43.1729 },
@@ -694,13 +592,13 @@ function obterCoordenadas(lugar) {
         'roma antiga': { lat: 41.9028, lng: 12.4964 },
         'constantinopla': { lat: 41.0082, lng: 28.9784 }
     };
-    
+
     for (const [key, coords] of Object.entries(coordenadas)) {
         if (lugarLower === key || lugarLower.includes(key)) {
             return coords;
         }
     }
-    
+
     return { lat: 0, lng: 0 };
 }
 
@@ -710,21 +608,21 @@ function buscarCoordenadasPorNome(lugar, nomeEvento) {
         criarMapaComCoordenadas(coordsCache.lat, coordsCache.lng, lugar, nomeEvento);
         return;
     }
-    
+
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(lugar)}&format=json&limit=1&accept-language=pt`;
-    
+
     const mapContainer = document.getElementById('map');
     if (mapContainer) {
         mapContainer.innerHTML = `
-            <div class="flex items-center justify-center h-full bg-[#F5F0E6]">
+            <div class="flex items-center justify-center h-full">
                 <div class="text-center">
                     <div class="loading-spinner mx-auto mb-4"></div>
-                    <p class="text-[#8B7355]">Buscando localização...</p>
+                    <p>Buscando localização...</p>
                 </div>
             </div>
         `;
     }
-    
+
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -746,72 +644,73 @@ function criarMapaComCoordenadas(lat, lng, lugar, nomeEvento) {
     try {
         const mapContainer = document.getElementById('map');
         if (!mapContainer) return;
-        
+
         if (currentMap) {
             currentMap.remove();
             currentMap = null;
         }
-        
+
         mapContainer.innerHTML = '';
-        
+
         const zoom = (lat === 0 && lng === 0) ? 2 : 6;
         const viewLat = (lat === 0 && lng === 0) ? 20 : lat;
         const viewLng = (lat === 0 && lng === 0) ? 0 : lng;
-        
+
         currentMap = L.map('map', {
             center: [viewLat, viewLng],
             zoom: zoom,
             zoomControl: true
         });
-        
+
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(currentMap);
-        
+
+        // ANTES: marcador em círculo perfeito com sombra difusa (visual
+        // "pin de app de mapa genérico"). Trocado por um selo quadrado com
+        // cantos levemente cortados, coerente com a estética de selo de
+        // cera / documento do restante do site.
         const customIcon = L.divIcon({
             className: 'custom-marker',
-            html: `
-                <div style="background: #8B6914; border-radius: 50%; width: 40px; height: 40px; border: 3px solid #5C4033; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-                </div>
-            `,
-            iconSize: [40, 40],
-            iconAnchor: [20, 40]
+            html: `<div style="background: #8B2E2E; width: 22px; height: 22px; border: 2px solid #F7F3EA; transform: rotate(45deg); box-shadow: 0 2px 4px rgba(0,0,0,0.35);"></div>`,
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
         });
-        
+
         if (lat !== 0 || lng !== 0) {
             L.marker([lat, lng], { icon: customIcon })
                 .bindPopup(`
-                    <div style="font-family: 'Inter', sans-serif; text-align: center; min-width: 200px;">
-                        <strong style="color: #5C4033; font-size: 1.2rem; display: block; margin-bottom: 4px;">${escapeHtml(nomeEvento)}</strong>
-                        <span style="color: #8B7355; font-size: 1.1rem;">${escapeHtml(lugar)}</span>
+                    <div style="font-family: 'Inter', sans-serif; text-align: center; min-width: 180px;">
+                        <strong style="color: #1C1712; font-size: 1rem; display: block; margin-bottom: 4px;">${escapeHtml(nomeEvento)}</strong>
+                        <span style="color: #3A3229; font-size: 0.9rem;">${escapeHtml(lugar)}</span>
                     </div>
                 `)
                 .openPopup();
-            
+
             L.circle([lat, lng], {
-                color: '#8B6914',
-                fillColor: '#D4C5A9',
-                fillOpacity: 0.2,
+                color: '#8B2E2E',
+                fillColor: '#B99A5B',
+                fillOpacity: 0.15,
                 radius: 50000
             }).addTo(currentMap);
         } else {
             L.popup()
                 .setLatLng([20, 0])
                 .setContent(`
-                    <div style="text-align: center; padding: 15px;">
-                        <p style="color: #5C4033; font-weight: bold; margin-top: 8px; font-size: 1.1rem;">Localização não encontrada</p>
-                        <p style="color: #8B7355; font-size: 1rem;">${escapeHtml(lugar)}</p>
+                    <div style="text-align: center; padding: 10px;">
+                        <p style="color: #1C1712; font-weight: bold; margin-top: 6px;">Localização não encontrada</p>
+                        <p style="color: #3A3229; font-size: 0.9rem;">${escapeHtml(lugar)}</p>
                     </div>
                 `)
                 .openOn(currentMap);
         }
-        
+
         setTimeout(() => {
             if (currentMap) {
                 currentMap.invalidateSize();
             }
         }, 300);
-        
+
     } catch (error) {
         console.error('Erro ao criar mapa:', error);
     }
@@ -820,21 +719,21 @@ function criarMapaComCoordenadas(lat, lng, lugar, nomeEvento) {
 function mostrarMapa(lugar, nomeEvento) {
     const modal = document.getElementById('mapModal');
     const mapContainer = document.getElementById('map');
-    
+
     if (!modal || !mapContainer) return;
-    
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    
+
     mapContainer.innerHTML = `
-        <div class="flex items-center justify-center h-full bg-[#F5F0E6]">
+        <div class="flex items-center justify-center h-full">
             <div class="text-center">
                 <div class="loading-spinner mx-auto mb-4"></div>
-                <p class="text-[#8B7355]">Carregando mapa...</p>
+                <p>Carregando mapa...</p>
             </div>
         </div>
     `;
-    
+
     setTimeout(() => {
         buscarCoordenadasPorNome(lugar, nomeEvento);
     }, 300);
@@ -846,9 +745,7 @@ function mostrarMapa(lugar, nomeEvento) {
 function carregarMaisEventos() {
     if (isLoading || todosEventosCarregados) return;
     isLoading = true;
-    
-    console.log(`Carregando mais eventos...`);
-    
+
     setTimeout(() => {
         currentPage++;
         renderTimeline();
@@ -866,7 +763,7 @@ function observeTimelineItems() {
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    
+
     items.forEach(item => observer.observe(item));
 }
 
@@ -877,19 +774,19 @@ function setupEventListeners() {
     document.getElementById('aplicarFiltros').addEventListener('click', () => {
         aplicarFiltros();
     });
-    
+
     document.getElementById('limparFiltros').addEventListener('click', () => {
         document.getElementById('lugarFilter').value = '';
         document.getElementById('anoFilter').value = '';
         document.getElementById('periodoFilter').value = '';
         aplicarFiltros();
     });
-    
+
     document.getElementById('fecharModal').addEventListener('click', () => {
         document.getElementById('saberMaisModal').classList.add('hidden');
         document.getElementById('saberMaisModal').classList.remove('flex');
     });
-    
+
     document.getElementById('fecharMapModal').addEventListener('click', () => {
         document.getElementById('mapModal').classList.add('hidden');
         document.getElementById('mapModal').classList.remove('flex');
@@ -898,7 +795,7 @@ function setupEventListeners() {
             currentMap = null;
         }
     });
-    
+
     window.addEventListener('click', (e) => {
         const modal = document.getElementById('saberMaisModal');
         const mapModal = document.getElementById('mapModal');
@@ -923,9 +820,9 @@ function setupEventListeners() {
 function mostrarErro(mensagem) {
     const container = document.getElementById('timelineItems');
     container.innerHTML = `
-        <div class="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl">
-            <p class="text-red-600 text-xl mb-4">${mensagem}</p>
-            <button onclick="location.reload()" class="btn-primary px-6 py-2 text-white rounded-xl font-semibold shadow-lg">
+        <div class="text-center py-16">
+            <p style="color: var(--seal-light);">${escapeHtml(mensagem)}</p>
+            <button onclick="location.reload()" class="action-btn-saber" style="margin-top: 1.25rem;">
                 Tentar Novamente
             </button>
         </div>
